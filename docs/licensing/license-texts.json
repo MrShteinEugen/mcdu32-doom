@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-20",
+  "scope": "Original license and copyright/credit texts; preserve verbatim. A hash match identifies bytes, not rights ownership.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "LICENSES/GPL-3.0-only.txt",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "vendor/doomgeneric/LICENSE",
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    {
+      "path": "assets/aircraft-font/LICENSE",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "assets/font-map-LICENSE.txt",
+      "sha256": "bc51cfb62cacd4df3cd4101e87ef47af4a63aadee5a939a6616e61a553b11a51"
+    },
+    {
+      "path": "assets/freedoom-LICENSE.txt",
+      "sha256": "7c62f2c520769c798774f416637eec4921e5f0aafdac1245ae7c8a8cf65fe102"
+    },
+    {
+      "path": "assets/freedoom-CREDITS.txt",
+      "sha256": "72364333d295c598d75ef9553d3b3661ad0b60e27271c87b7637c74b2f46918a"
+    }
+  ]
+}

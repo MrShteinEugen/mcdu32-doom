@@ -1,0 +1,71 @@
+{
+  "blocks": "arranged board to illustrate the isolated block-game renderer",
+  "comparison": "each four-way comparison uses one immutable engine Frame",
+  "game_data": "Freedoom Phase 1 0.13.0",
+  "images": "software captures; not photographs of physical LCD",
+  "scenes": [
+    {
+      "display_pixels": [
+        583,
+        434
+      ],
+      "modes": [
+        {
+          "mode": "glyphs",
+          "render_ms": 66.0268,
+          "reports": 83
+        },
+        {
+          "mode": "contrast",
+          "render_ms": 51.9452,
+          "reports": 85
+        },
+        {
+          "mode": "color-ascii",
+          "render_ms": 0.301,
+          "reports": 79
+        }
+      ],
+      "scene": "foyer",
+      "source_fnv1a64": "5e9782323a879044",
+      "source_generation": 36,
+      "source_pixels": [
+        320,
+        200
+      ],
+      "visible_enemy_pixels": 0
+    },
+    {
+      "display_pixels": [
+        583,
+        434
+      ],
+      "modes": [
+        {
+          "mode": "glyphs",
+          "render_ms": 53.759,
+          "reports": 81
+        },
+        {
+          "mode": "contrast",
+          "render_ms": 48.5084,
+          "reports": 79
+        },
+        {
+          "mode": "color-ascii",
+          "render_ms": 0.4127,
+          "reports": 79
+        }
+      ],
+      "scene": "encounter",
+      "source_fnv1a64": "09fa70625c77bacc",
+      "source_generation": 325,
+      "source_pixels": [
+        320,
+        200
+      ],
+      "visible_enemy_pixels": 4995
+    }
+  ],
+  "usb_opened": false
+}

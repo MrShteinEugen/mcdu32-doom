@@ -1,0 +1,70 @@
+{
+  "game_data": "Freedoom Phase 1 0.13.0",
+  "wad_sha256": "7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d",
+  "images": [
+    {
+      "path": "blocks.png",
+      "sha256": "97bb81cfab32847b8a439cf92a46e41b77a2a7c32319d818e82a11a5fefc888a"
+    },
+    {
+      "path": "encounter-ascii.png",
+      "sha256": "7e556f5c830049c3415e04f9426056eb116ea36957876812713fc73cddc2c637"
+    },
+    {
+      "path": "encounter-comparison.png",
+      "sha256": "ff11115d93988adcd8277a497117af64784deddb00f1193a528d744d032e29a3"
+    },
+    {
+      "path": "encounter-contrast.png",
+      "sha256": "e0191a3f2b648ed13004d24cd99fef441b3bfb1e902f26e864574b30079ba2a5"
+    },
+    {
+      "path": "encounter-glyphs.png",
+      "sha256": "5a7170a759cd84bb941ec6ce88306a78e8ef642fa039016bc57a3cda5204d087"
+    },
+    {
+      "path": "encounter-source.png",
+      "sha256": "9e7000bc861a1426a5611cf4c0f630f5581ef8b671b280c8ce17cf366bf958ac"
+    },
+    {
+      "path": "foyer-ascii.png",
+      "sha256": "343e97c4a18eb96ca97677cdb48a2358d05a11d137da2e227725fa7a88786776"
+    },
+    {
+      "path": "foyer-comparison.png",
+      "sha256": "3a8d17815837e36f96bc18ff071ecfca5bd6c794f19f4d0bb187fdef66e6a4b2"
+    },
+    {
+      "path": "foyer-contrast.png",
+      "sha256": "701b3eae6563b22ef1af4771cf5c7c247c27fc8ff9fa975561d056b0a489c2ad"
+    },
+    {
+      "path": "foyer-glyphs.png",
+      "sha256": "e7f96b1031e080d5830cbf9f8c0be0c1ce9a6fe8b7a2d01b0a5cfd355e192adb"
+    },
+    {
+      "path": "foyer-source.png",
+      "sha256": "7a8c47d021e03344d739addee7a489b94b74c86409e66468374209f1c3987c11"
+    },
+    {
+      "path": "mcdu-init.png",
+      "sha256": "a12e3756599ee85243ee5bf02ddf8702478053fbeacff89c42a71df7bb641568"
+    },
+    {
+      "path": "mcdu-menu.png",
+      "sha256": "95030141f32ac16e3e872a42c5b45dbb09edaf0e14fbf25a2591837900272352"
+    },
+    {
+      "path": "mcdu-perf.png",
+      "sha256": "3706e861bd1d9aa2a3c6494d7a48d2d94e54462f437ac152da9857491840d6d9"
+    },
+    {
+      "path": "mcdu-prog.png",
+      "sha256": "74565ee928a98b78a57810c0a7c759d77c17dc1215251aa0b917e659a9c117b2"
+    },
+    {
+      "path": "mcdu-radio.png",
+      "sha256": "ad3da0b9f045f5145075ecea9f2659e5375e1d872813e57d82ebfd8a1f24bd34"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "review_date": "2026-10-20",
+  "fbw_revision": "76db0aef132fd9698fd4013e2d7239c517dd284e",
+  "font_files": [
+    {
+      "path": "assets/aircraft-font/HoneywellMCDU.sfd",
+      "sha256": "6d3f091a765de676f23cde8760fa7d8b13f1c93022db698bb1c7382286bc5432",
+      "upstream_path": "fbw-a32nx/src/fonts/HoneywellMCDU.sfd",
+      "git_blob_sha1": "bd43d6f56034995c10cd279234daa53f1a73a8db",
+      "matches_pinned_upstream": true
+    },
+    {
+      "path": "assets/aircraft-font/HoneywellMCDU.ttf",
+      "sha256": "ea1919ffba22ec6ec61849b4580fb5b4f5efd86a53689a7462416787d55037ba",
+      "upstream_path": "fbw-a32nx/src/base/flybywire-aircraft-a320-neo/html_ui/Fonts/fbw-a32nx/HoneywellMCDU.ttf",
+      "git_blob_sha1": "f4ed812c9930b1be538c4489369dba7f76ac1b86",
+      "matches_pinned_upstream": true
+    },
+    {
+      "path": "assets/aircraft-font/HoneywellMCDUSmall.sfd",
+      "sha256": "09bf8ff4abf707a924a7e4b7952939b9d08b68509e1f65662857b31d2a31a3de",
+      "upstream_path": "fbw-a32nx/src/fonts/HoneywellMCDUSmall.sfd",
+      "git_blob_sha1": "2686a543e35f2b7b97c39c67c6816d34ecf29578",
+      "matches_pinned_upstream": true
+    },
+    {
+      "path": "assets/aircraft-font/HoneywellMCDUSmall.ttf",
+      "sha256": "7cfe6c5b2b4fa91d3026669ff4a2b52f5ec00014b830fd62476905c4db373c36",
+      "upstream_path": "fbw-a32nx/src/base/flybywire-aircraft-a320-neo/html_ui/Fonts/fbw-a32nx/HoneywellMCDUSmall.ttf",
+      "git_blob_sha1": "d29193752d0da8e259b271a8fb917ea9ce581a77",
+      "matches_pinned_upstream": true
+    }
+  ],
+  "font_license_verified_against_pinned_revision": true,
+  "font_map_upstream_file": "library/mcdu-dotnet/Resources/WinWingFontPacketMap-3x29.json",
+  "font_map_equal_as_json": true,
+  "font_map_license": "BSD-3-Clause",
+  "freedoom_iwad_sha256": "7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d"
+}

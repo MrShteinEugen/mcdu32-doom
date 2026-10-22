@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-20",
+  "target": "x86_64-pc-windows-msvc",
+  "components": [
+    {
+      "package": "hidapi",
+      "version": "2.6.7",
+      "package_declaration": "MIT",
+      "native_component": "libusb/hidapi Windows implementation compiled by hidapi-rs build.rs",
+      "native_offered_choices": "GPLv3 OR BSD-style OR original HIDAPI license, per etc/hidapi/LICENSE.txt",
+      "selected_native_license": "BSD-3-Clause",
+      "native_notices": [
+        "etc/hidapi/LICENSE.txt",
+        "etc/hidapi/LICENSE-bsd.txt",
+        "etc/hidapi/LICENSE-orig.txt",
+        "etc/hidapi/LICENSE-gpl3.txt"
+      ],
+      "build_script_header": "GPL-3.0-or-later; preserve if redistributing build.rs; do not silently replace with Cargo package MIT",
+      "explanation": "The selected binary links native hid.c. The build script executes on the build host; it is not linked as Rust application code. All original notices are retained. This exception is recorded, not resolved by relabeling files.",
+      "reviewed_files": [
+        {
+          "path": "build.rs",
+          "sha256": "333ac4b6d80a0e6e077c5f46a232c4101cb0f7cca0d44a05f93a60fa7a2152a1"
+        },
+        {
+          "path": "etc/hidapi/windows/hid.c",
+          "sha256": "48754b4ef9ccfe31636728d55aba9e1dd41f39d9b9550bb13ac947ea9fe5ee94"
+        },
+        {
+          "path": "etc/hidapi/windows/hidapi_winapi.h",
+          "sha256": "45de813b517c96ec6e335c7a9d9b5a5c90c8bc7a69f0aa188626faedbdf25efe"
+        },
+        {
+          "path": "etc/hidapi/hidapi/hidapi.h",
+          "sha256": "444ef37b6efb7f7297c51e7375b954710f6573c2291fdd4aa08903cd94137faa"
+        }
+      ]
+    }
+  ],
+  "other_native_review": "minifb 0.29.0 build.rs has no native C/Objective-C compilation branch on Windows; non-Windows targets require their own review. System/toolchain runtime rights are outside this source-only inventory."
+}
