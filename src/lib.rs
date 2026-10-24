@@ -5,4 +5,5 @@ pub mod config;
 pub mod device;
 pub mod display;
 pub mod doom;
+pub mod input;
 pub mod runtime;
