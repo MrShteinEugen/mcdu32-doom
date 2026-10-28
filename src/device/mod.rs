@@ -4,4 +4,5 @@ mod captured_font;
 mod error;
 pub mod font;
 pub mod protocol;
+pub mod transport;
 pub mod virtual_display;
