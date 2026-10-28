@@ -1,15 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
-use crate::display::{CELL_H, CELL_W, Screen, atlas::Atlas};
-use serde::Deserialize;
-use thiserror::Error;
-
-#[derive(Debug, Error)]
-pub enum ProtocolError {
-    #[error("invalid font map: {0}")]
-    InvalidMap(String),
-    #[error("invalid screen cell {0}")]
-    InvalidCell(usize),
-}
+pub use super::captured_font::preserve_grid;
+pub use super::error::ProtocolError;
+use super::{captured_font, error::invalid};
+use crate::display::{Screen, atlas::Atlas};
 
 /// IDs 0xf0 and 0xf2 are report IDs, not an extra USB payload byte.
 pub fn screen_packets(atlas: &Atlas, screen: &Screen) -> Result<Vec<Vec<u8>>, ProtocolError> {
@@ -53,30 +46,9 @@ pub fn encode_cells(
         .collect())
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct FontMap {
-    glyph_width: usize,
-    glyph_height: usize,
-    packets: Vec<String>,
-    x_offset_offset: usize,
-    y_offset_offset: usize,
-    glyph_width_offsets: Vec<usize>,
-    glyph_height_offsets: Vec<usize>,
-    display_brightness_offset: usize,
-    large_glyph_offsets: Vec<GlyphOffsets>,
-    small_glyph_offsets: Vec<GlyphOffsets>,
-}
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct GlyphOffsets {
-    character: char,
-    glyph_map: Vec<i32>,
-}
-
 /// Patch the captured, licensed font transaction only at documented bitmap/geometry offsets.
 pub fn font_packets(atlas: &Atlas, brightness: u8) -> Result<Vec<Vec<u8>>, ProtocolError> {
-    captured_font_packets(atlas, brightness)
+    captured_font::packets(atlas, brightness)
 }
 
 /// Compact geometry with rebuilt 32-byte records (two bytes per row), visually
@@ -87,15 +59,7 @@ pub fn font_packets_for_grid(
     dense: bool,
 ) -> Result<Vec<Vec<u8>>, ProtocolError> {
     if dense {
-        return crate::device::font::rebuild(
-            atlas,
-            11,
-            14,
-            crate::device::font::Packing::Tight,
-            brightness,
-        )
-        .map(|upload| upload.packets)
-        .map_err(|error| invalid(format!("{error:#}")));
+        return resized_font_packets(atlas, 11, 14, brightness);
     }
     font_packets(atlas, brightness)
 }
@@ -109,15 +73,12 @@ pub fn display_setup(
     keep_grid: bool,
 ) -> Result<Vec<Vec<u8>>, ProtocolError> {
     let mut packets = if geometry.compact() && !legacy_font {
-        crate::device::font::rebuild(
+        resized_font_packets(
             atlas,
             geometry.glyph_width as usize,
             geometry.glyph_height as usize,
-            crate::device::font::Packing::Tight,
             200,
-        )
-        .map_err(|error| invalid(format!("{error:#}")))?
-        .packets
+        )?
     } else {
         font_packets(atlas, 200)?
     };
@@ -128,65 +89,21 @@ pub fn display_setup(
     Ok(packets)
 }
 
-fn captured_font_packets(atlas: &Atlas, brightness: u8) -> Result<Vec<Vec<u8>>, ProtocolError> {
-    let map: FontMap = serde_json::from_str(include_str!("../../assets/font-map.json"))
-        .map_err(|e| invalid(e.to_string()))?;
-    if map.glyph_width != CELL_W || map.glyph_height != CELL_H {
-        return Err(invalid("font dimensions mismatch"));
-    }
-    let mut blob = Vec::new();
-    let mut lengths = Vec::new();
-    for encoded in &map.packets {
-        let hex = encoded.replace("{CP}", "32bb");
-        if hex.len() % 2 != 0 {
-            return Err(invalid("odd hex length"));
-        }
-        let clean: String = hex
-            .chars()
-            .map(|c| if "_HLWXY".contains(c) { '0' } else { c })
-            .collect();
-        for pair in clean.as_bytes().chunks_exact(2) {
-            let word = std::str::from_utf8(pair).map_err(|_| invalid("non-ASCII packet"))?;
-            blob.push(u8::from_str_radix(word, 16).map_err(|_| invalid("bad packet hex"))?);
-        }
-        lengths.push(clean.len() / 2);
-    }
-    for (id, glyph) in atlas.glyphs.iter().enumerate() {
-        let (character, small) = atlas.address(id as u8);
-        let offsets = if small {
-            &map.small_glyph_offsets
-        } else {
-            &map.large_glyph_offsets
-        };
-        let offset = offsets
-            .iter()
-            .find(|entry| entry.character == character)
-            .ok_or_else(|| invalid(format!("unmapped glyph {character}")))?;
-        let expanded = expand_offsets(&offset.glyph_map)?;
-        if expanded.len() != glyph.bitmap.len() {
-            return Err(invalid(format!("glyph {character} byte count mismatch")));
-        }
-        for (&offset, &value) in expanded.iter().zip(&glyph.bitmap) {
-            set(&mut blob, offset, value)?;
-        }
-    }
-    // Same origin as the source driver's centered 23x29 MCDU layout.
-    set(&mut blob, map.x_offset_offset, 0x34)?;
-    set(&mut blob, map.y_offset_offset, 0x25)?;
-    set(&mut blob, map.display_brightness_offset, brightness)?;
-    for &offset in &map.glyph_width_offsets {
-        set(&mut blob, offset, CELL_W as u8)?;
-    }
-    for &offset in &map.glyph_height_offsets {
-        set(&mut blob, offset, CELL_H as u8)?;
-    }
-    let mut packets = Vec::with_capacity(lengths.len());
-    let mut start = 0;
-    for length in lengths {
-        packets.push(blob[start..start + length].to_vec());
-        start += length;
-    }
-    Ok(packets)
+fn resized_font_packets(
+    atlas: &Atlas,
+    width: usize,
+    height: usize,
+    brightness: u8,
+) -> Result<Vec<Vec<u8>>, ProtocolError> {
+    super::font::rebuild(
+        atlas,
+        width,
+        height,
+        super::font::Packing::Tight,
+        brightness,
+    )
+    .map(|upload| upload.packets)
+    .map_err(|error| invalid(format!("{error:#}")))
 }
 
 /// Text-grid block (0x0118) followed by COMMIT, following the source driver's
@@ -205,22 +122,6 @@ pub fn grid_packet(dense: bool) -> [u8; 64] {
     packet[33..37].copy_from_slice(&[5, 1, 0, 0]);
     packet[41] = 1;
     packet
-}
-
-/// Remove only the captured grid-position/dimension transaction. Font uploads
-/// contain this command too, so omitting a later grid command alone is insufficient.
-pub fn preserve_grid(packets: &mut Vec<Vec<u8>>) {
-    packets.retain(|packet| {
-        !(packet.len() >= 46
-            && packet[0] == 0xf0
-            && packet[1] == 0
-            && packet[3] == 42
-            && packet[4..10] == [0x32, 0xbb, 0, 0, 0x18, 1])
-    });
-}
-
-fn invalid(message: impl Into<String>) -> ProtocolError {
-    ProtocolError::InvalidMap(message.into())
 }
 
 /// Paint the panel's entire LCD black, including pixels outside the text grid.
@@ -268,33 +169,6 @@ pub fn annunciator_brightness() -> [u8; 64] {
     report[8] = 255;
     report
 }
-fn set(blob: &mut [u8], offset: usize, value: u8) -> Result<(), ProtocolError> {
-    *blob
-        .get_mut(offset)
-        .ok_or_else(|| invalid("offset outside packet blob"))? = value;
-    Ok(())
-}
-fn expand_offsets(map: &[i32]) -> Result<Vec<usize>, ProtocolError> {
-    let mut result = Vec::new();
-    let mut index = 0;
-    while index < map.len() {
-        if map[index] == -1 {
-            if index + 2 >= map.len() || map[index + 1] < 0 || map[index + 2] < map[index + 1] {
-                return Err(invalid("bad offset range"));
-            }
-            result.extend((map[index + 1]..=map[index + 2]).map(|n| n as usize));
-            index += 3;
-        } else {
-            if map[index] < 0 {
-                return Err(invalid("negative offset"));
-            }
-            result.push(map[index] as usize);
-            index += 1;
-        }
-    }
-    Ok(result)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

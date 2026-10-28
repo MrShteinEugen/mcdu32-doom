@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-use crate::{display::hud::HudState, input::Inputs};
+use crate::{doom::hud::HudState, input::Inputs};
 use anyhow::{Context, Result, ensure};
 use std::{
     cell::RefCell,
@@ -225,11 +225,12 @@ pub fn spawn(
         .context("start DOOM engine")
 }
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_Init() {}
+// Export names match DoomGeneric's C declarations; Rust names follow snake_case.
+#[unsafe(export_name = "DG_Init")]
+extern "C" fn dg_init() {}
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_DrawFrame() {
+#[unsafe(export_name = "DG_DrawFrame")]
+extern "C" fn dg_draw_frame() {
     CONTEXT.with(|state| {
         if let Some(context) = state.borrow().as_ref() {
             // SAFETY: the C engine allocated a 320x200 u32 buffer before callbacks;
@@ -267,8 +268,8 @@ extern "C" fn DG_DrawFrame() {
     });
 }
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_GetTicksMs() -> u32 {
+#[unsafe(export_name = "DG_GetTicksMs")]
+extern "C" fn dg_get_ticks_ms() -> u32 {
     CONTEXT.with(|state| {
         state
             .borrow()
@@ -277,16 +278,16 @@ extern "C" fn DG_GetTicksMs() -> u32 {
     })
 }
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_SleepMs(ms: u32) {
+#[unsafe(export_name = "DG_SleepMs")]
+extern "C" fn dg_sleep_ms(ms: u32) {
     thread::sleep(Duration::from_millis(u64::from(ms)));
 }
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_SetWindowTitle(_title: *const c_char) {}
+#[unsafe(export_name = "DG_SetWindowTitle")]
+extern "C" fn dg_set_window_title(_title: *const c_char) {}
 
-#[unsafe(no_mangle)]
-extern "C" fn DG_GetKey(pressed: *mut c_int, key: *mut u8) -> c_int {
+#[unsafe(export_name = "DG_GetKey")]
+extern "C" fn dg_get_key(pressed: *mut c_int, key: *mut u8) -> c_int {
     if pressed.is_null() || key.is_null() {
         return 0;
     }

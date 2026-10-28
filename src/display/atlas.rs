@@ -46,6 +46,15 @@ pub struct Glyph {
     pub bitmap: [u8; CELL_H * 3],
 }
 
+/// Shared sampling coordinates for glyph matching, rasterization and font uploads.
+pub(crate) fn source_pixel(x: usize, y: usize, width: usize, height: usize) -> (usize, usize) {
+    assert!(x < width && y < height, "pixel outside resized glyph");
+    (
+        ((2 * x + 1) * CELL_W / (2 * width)).min(CELL_W - 1),
+        ((2 * y + 1) * CELL_H / (2 * height)).min(CELL_H - 1),
+    )
+}
+
 impl Glyph {
     pub fn from_fn(mut pixel: impl FnMut(usize, usize) -> bool) -> Self {
         let mut glyph = Self {
@@ -63,6 +72,12 @@ impl Glyph {
 
     pub fn pixel(&self, x: usize, y: usize) -> bool {
         self.bitmap[y * 3 + x / 8] & (0x80 >> (x % 8)) != 0
+    }
+
+    /// Sample the center of a target pixel using the font upload's nearest-neighbor rule.
+    pub fn resized_pixel(&self, x: usize, y: usize, width: usize, height: usize) -> bool {
+        let (source_x, source_y) = source_pixel(x, y, width, height);
+        self.pixel(source_x, source_y)
     }
 
     pub fn features(&self) -> [f32; SAMPLE * SAMPLE] {
@@ -98,9 +113,7 @@ impl Glyph {
                 let mut ink = 0.0;
                 for y in y0.floor() as usize..(y1.ceil() as usize).min(height) {
                     for x in x0.floor() as usize..(x1.ceil() as usize).min(width) {
-                        let px = ((2 * x + 1) * CELL_W / (2 * width)).min(CELL_W - 1);
-                        let py = ((2 * y + 1) * CELL_H / (2 * height)).min(CELL_H - 1);
-                        if self.pixel(px, py) {
+                        if self.resized_pixel(x, y, width, height) {
                             ink += (((x + 1) as f32).min(x1) - x0.max(x as f32))
                                 * (((y + 1) as f32).min(y1) - y0.max(y as f32));
                         }
@@ -341,7 +354,8 @@ impl Atlas {
     }
 }
 
-fn text_glyph(rows: [u8; 7]) -> Glyph {
+/// Expand a 5x7 character into the shared, centered 23x29 font cell.
+pub(crate) fn text_glyph(rows: [u8; 7]) -> Glyph {
     Glyph::from_fn(|x, y| {
         if !(4..19).contains(&x) || !(4..25).contains(&y) {
             return false;

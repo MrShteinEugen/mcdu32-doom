@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /* Host ABI shared by the bridge and the small hooks in vendored DOOM.
-   Rust mirrors these fixed-width layouts in display/hud.rs and doom/text.rs. */
+   Rust mirrors these fixed-width layouts in doom/hud.rs and doom/text.rs. */
 #ifndef MCDU_DOOM_BRIDGE_H
 #define MCDU_DOOM_BRIDGE_H
 #include <stdint.h>

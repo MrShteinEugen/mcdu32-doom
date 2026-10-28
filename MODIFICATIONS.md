@@ -23,8 +23,8 @@ whether they match that baseline. Underlying copyright/grants are retained.
 | `vendor/doomgeneric/r_things.c` | Export clipped visible sprite ownership/enemy semantics. |
 | `vendor/doomgeneric/mcdu_text.h` | New host ABI include, GPL-3.0-only; not an upstream file. |
 
-The host bridge/build configuration is supplied in `src/doom_bridge.c`,
-`src/doom_bridge.h` and `build.rs`. These are downstream host code. The selected
+The host bridge/build configuration is supplied in `src/doom/native/doom_bridge.c`,
+`src/doom/native/doom_bridge.h` and `build.rs`. These are downstream host code. The selected
 engine build uses a 320 × 200 framebuffer without sound, networking or DEHACKED.
 Engine rules are otherwise retained. Do not infer any new upstream permission
 from this modification record.
@@ -60,6 +60,13 @@ in [image notices](docs/images/LICENSE.md) and [generation metadata](docs/images
 Underlying Freedoom artwork is not relabeled as the host author's exclusive work.
 
 ## Future changes
+
+Migration update **2026-10-26**: host Rust modules and the C bridge were moved
+into domain directories. ABI data and rendering were separated, shared glyph
+sampling and capture helpers were extracted, and emulator validation and PNG
+finalization were strengthened. The explicit C source list preserves the MVP
+build inputs. Vendored engine files retain the exact bytes recorded in
+`docs/engine-provenance.json`; this migration does not add further engine changes.
 
 Keep this record with the changed files, update its notice date and descriptions
 when those modifications change, and regenerate the relevant provenance records.

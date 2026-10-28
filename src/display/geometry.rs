@@ -45,7 +45,7 @@ impl Geometry {
             "virtual grid must be 24..96 columns and 4..64 rows"
         );
         ensure!(
-            rows > crate::display::hud::panel_rows(columns),
+            rows > crate::display::layout::panel_rows(columns),
             "virtual grid needs a gameplay row above the status bar"
         );
         let (width, height) = match (columns, rows) {

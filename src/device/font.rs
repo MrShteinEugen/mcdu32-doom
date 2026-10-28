@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 //! Font-bank reserialization from the licensed capture map.
 //! Tight 11x14 records are verified on Captain V1.06; other packings are probes.
-use crate::device::protocol;
+use super::captured_font;
 use crate::display::{CELL_H, CELL_W, atlas::Atlas};
 use anyhow::{Context, Result, bail, ensure};
 use clap::ValueEnum;
@@ -63,7 +63,7 @@ pub fn rebuild(
         (7..=CELL_H).contains(&height),
         "font height must be 7..={CELL_H}"
     );
-    let original = protocol::font_packets(atlas, brightness)?;
+    let original = captured_font::packets(atlas, brightness)?;
     let resets: Vec<_> = original
         .iter()
         .enumerate()
@@ -79,7 +79,7 @@ pub fn rebuild(
         parse_bank(&original[resets[0] + 1..resets[1]])?,
     ];
     let mut suffix = original[resets[1] + 1..].to_vec();
-    protocol::preserve_grid(&mut suffix);
+    captured_font::preserve_grid(&mut suffix);
     let row_bytes = match packing {
         Packing::Tight => width.div_ceil(8),
         Packing::Padded | Packing::Captured => 3,
@@ -109,8 +109,7 @@ pub fn rebuild(
             dst[..4].copy_from_slice(&src[..4]);
             for y in 0..height {
                 for x in 0..width {
-                    let sx = (2 * x + 1) * CELL_W / (2 * width);
-                    let sy = (2 * y + 1) * CELL_H / (2 * height);
+                    let (sx, sy) = crate::display::atlas::source_pixel(x, y, width, height);
                     if src[4 + sy * 3 + sx / 8] & (0x80 >> (sx % 8)) != 0 {
                         dst[4 + y * row_bytes + x / 8] |= 0x80 >> (x % 8);
                     }

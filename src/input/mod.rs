@@ -2,9 +2,6 @@
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 
-mod keyboard;
-pub use keyboard::{keyboard_report, keyboard_state};
-
 pub const DOOM_KEYS: [u8; 22] = [
     0xad, 0xaf, 0xac, 0xae, 0xa3, 0xa2, 0xb6, 0xa0, 0xa1, 13, 27, 9, b'1', b'2', b'3', b'4', b'5',
     b'6', b'7', b'8', b'9', b'y',

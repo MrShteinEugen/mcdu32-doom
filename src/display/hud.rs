@@ -1,22 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 use crate::display::atlas::{BLANK, PORTRAIT, text_id};
-use crate::display::{COLS, Cell, Screen};
-
-#[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub struct HudState {
-    pub active: i32,
-    pub health: i32,
-    pub armor: i32,
-    pub ammo: i32,
-    pub weapon: i32,
-    pub owned: i32,
-    pub keys: i32,
-    pub skulls: i32,
-    pub damage: i32,
-    pub ammo_counts: [i32; 4],
-    pub ammo_max: [i32; 4],
-}
+use crate::display::{COLS, Cell, Screen, layout::panel_rows};
+use crate::doom::hud::HudState;
 
 #[derive(Default)]
 pub struct Hud {
@@ -24,10 +9,6 @@ pub struct Hud {
     cached: Vec<Cell>,
     pub rebuilds: u64,
     cached_cols: usize,
-}
-
-pub fn panel_rows(cols: usize) -> usize {
-    if cols >= 40 { 5 } else { 3 }
 }
 
 impl Hud {
