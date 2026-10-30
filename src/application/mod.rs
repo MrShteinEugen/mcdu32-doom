@@ -14,9 +14,9 @@ pub fn report_background_error(error: &anyhow::Error) {
 mod play;
 mod play_metrics;
 
-use self::args::{Command, CommonArgs, EmulateArgs, TimingArgs};
 use crate::{desktop::emulator, device::transport, display::Profile};
 use anyhow::Result;
+use args::{Command, CommonArgs, EmulateArgs, TimingArgs};
 
 fn run(command: Option<Command>) -> Result<()> {
     let command = command.unwrap_or_else(|| Command::Serve(args::ServeArgs::default()));
