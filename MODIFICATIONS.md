@@ -55,7 +55,7 @@ in [THIRD_PARTY.md](THIRD_PARTY.md).
 ## Images and data
 
 No IWAD is included. Freedoom framebuffer captures, glyph/contrast/ASCII
-transformations, comparison layouts and aircraft/Blocks captures are identified
+transformations, comparison layouts and aircraft captures are identified
 in [image notices](docs/images/LICENSE.md) and [generation metadata](docs/images/gallery.json).
 Underlying Freedoom artwork is not relabeled as the host author's exclusive work.
 
@@ -67,6 +67,12 @@ sampling and capture helpers were extracted, and emulator validation and PNG
 finalization were strengthened. The explicit C source list preserves the MVP
 build inputs. Vendored engine files retain the exact bytes recorded in
 `docs/engine-provenance.json`; this migration does not add further engine changes.
+
+Migration update **2026-10-30**: MCDU/DOOM service orchestration and navigation
+were moved into `src/service/`. Pause handling is shared, input ownership is
+released on shutdown and startup errors, and closing the command channel stops
+the service. Blocks and its long-slash launch gesture are excluded. These are
+host-only changes; vendored engine and original font files remain unchanged.
 
 Keep this record with the changed files, update its notice date and descriptions
 when those modifications change, and regenerate the relevant provenance records.

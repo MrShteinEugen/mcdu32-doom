@@ -84,12 +84,6 @@ Tyler Knox, are distributed under that upstream repository's GPLv3 license.
 license and provenance. `scripts/build-aircraft-font.py` regenerates the embedded
 23 × 29 monochrome bitmap banks. See its NOTICE.md for upstream source links.
 
-## Original mini-game
-
-`src/games/blocks/` is original host code with its own board, pieces and visual
-presentation, without any third-party game assets. It is not a Tetris license or
-an assertion that game rules/appearance/trademarks are free of third-party rights.
-
 The Rust dependency graph and its original license texts are inventoried and
 collected by `scripts/prepare-publication.ps1`, from locked local Cargo metadata.
 The resulting source archive has hashes for its files, not an ownership warranty.

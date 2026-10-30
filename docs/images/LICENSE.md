@@ -10,7 +10,6 @@ No commercial DOOM textures, sprites, levels or logo images are used.
 | `*-glyphs.png`, `*-contrast.png`, `*-ascii.png` | New rendering/presentation contributions under **GPL-3.0-only**, retaining **BSD-3-Clause** for the underlying Freedoom artwork and portrait. |
 | `*-comparison.png` | Same game-image terms, plus GPLv3 font-derived captions. Preserve both GPL and Freedoom notices. |
 | `mcdu-*.png` | **GPL-3.0-only** for the page adaptations/presentation; includes GPLv3 FlyByWire font glyphs. |
-| `blocks.png` | New Blocks presentation under **GPL-3.0-only**. The arranged board is a renderer illustration. |
 
 The combined game/comparison images therefore carry both GPL-3.0-only and
 BSD-3-Clause obligations, not a claim of exclusive ownership over Freedoom.

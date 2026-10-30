@@ -1,5 +1,4 @@
 {
-  "blocks": "arranged board to illustrate the isolated block-game renderer",
   "comparison": "each four-way comparison uses one immutable engine Frame",
   "game_data": "Freedoom Phase 1 0.13.0",
   "images": "software captures; not photographs of physical LCD",

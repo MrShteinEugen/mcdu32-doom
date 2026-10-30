@@ -3,10 +3,6 @@
   "wad_sha256": "7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d",
   "images": [
     {
-      "path": "blocks.png",
-      "sha256": "97bb81cfab32847b8a439cf92a46e41b77a2a7c32319d818e82a11a5fefc888a"
-    },
-    {
       "path": "encounter-ascii.png",
       "sha256": "7e556f5c830049c3415e04f9426056eb116ea36957876812713fc73cddc2c637"
     },

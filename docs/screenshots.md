@@ -17,10 +17,10 @@ and emphasizes visible enemies. The original 320 × 200 source is enlarged exact
 The other tiles retain their native 583 × 434 raster. Captions and padding are
 presentation only. Individual PNGs contain neither the captions nor the padding.
 
-| Scene | Engine framebuffer | Color glyphs | Contrast glyphs | Color ASCII |
-| --- | --- | --- | --- | --- |
-| Spawn room | 320 × 200 | 583 × 434 | 583 × 434 | 583 × 434 |
-| Enemy encounter | 320 × 200 | 583 × 434 | 583 × 434 | 583 × 434 |
+| Scene           | Engine framebuffer | Color glyphs | Contrast glyphs | Color ASCII |
+|-----------------|--------------------|--------------|-----------------|-------------|
+| Spawn room      | 320 × 200          | 583 × 434    | 583 × 434       | 583 × 434   |
+| Enemy encounter | 320 × 200          | 583 × 434    | 583 × 434       | 583 × 434   |
 
 Source frame generations, fingerprints, visible-enemy pixel counts, actual packet
 counts and one-off render timings are in [gallery.json](images/gallery.json).
@@ -29,8 +29,8 @@ Those single-sample timings are not a benchmark or a hardware presentation rate.
 ## Aircraft pages
 
 | MCDU MENU, red DOOM entry at L5 | INIT |
-| --- | --- |
-| MCDU MENU | INIT |
+|---------------------------------|------|
+| MCDU MENU                       | INIT |
 
 | TAKE OFF | PROG |
 |----------|------|
@@ -39,13 +39,6 @@ Those single-sample timings are not a benchmark or a hardware presentation rate.
 RADIO NAV, full raster.
 Aircraft screenshots use the actual 24 × 14 font/grid and local page state.
 Fonts and template references are credited in [the font notice](../assets/aircraft-font/NOTICE.md).
-
-## Blocks
-
-Blocks renderer with an arranged board
-
-This board is arranged by the capture example to illustrate the renderer; it is
-not a recorded play session. It uses the original unbranded Blocks engine/layout.
 
 ## Recreate the images
 

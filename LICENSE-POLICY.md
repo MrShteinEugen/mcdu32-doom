@@ -78,7 +78,7 @@ binary release separately rather than treating this source preparation as that a
 ## Rights outside the code license
 
 No endorsement or trademark license is asserted for DOOM, Airbus/A320, FlyByWire,
-Honeywell, WINCTRL/WINWING or Tetris. Names describe the software, compatibility
+Honeywell or WINCTRL/WINWING. Names describe the software, compatibility
 or references. GPLv3 section 7 permits preserving specified attribution and
 withholding trademark permissions; this policy adds no trademark permission or
 new restriction to GPL-covered code. Existing trademark rights remain separate.

@@ -43,17 +43,6 @@ No screenshots, aircraft performance tables, AIRAC data, flight manuals or
 simulator flight logic are included. GPL compliance does not establish a grant
 of trademark rights or immunity from every interface/trade-dress claim.
 
-`src/games/blocks/` is independently authored and isolated from DOOM. It retains
-line-clearing falling-block mechanics while using a distinct 12 × 18 board,
-eight mixed-size pieces, nonstandard rotation/scoring and neutral presentation.
-It includes no branded assets, music, guideline implementation, ghost/hold view
-or official per-piece color scheme. The 2012 Xio decision illustrates why merely
-rewriting code or renaming a visually close clone is insufficient. These changes
-reduce similarity; they are not a clearance from any rights holder. If public
-distribution must have a legally reviewed risk level, have qualified counsel
-review the actual build and presentation, especially the game and hardware
-protocol provenance, before publishing.
-
 ## Reproducible source-only archive
 
 Run from PowerShell:
@@ -146,5 +135,4 @@ from another rights holder. See [unsent clarification questions](licensing/upstr
   [INIT](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/init/),
   [PROG](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/prog/),
   [PERF](https://docs.flybywiresim.com/pilots-corner/a32nx/a32nx-briefing/mcdu/perf/).
-- [Tetris Holding v. Xio, official court opinion](https://www.govinfo.gov/content/pkg/USCOURTS-njd-3_09-cv-06115/pdf/USCOURTS-njd-3_09-cv-06115-0.pdf).
 - [GitHub secret scanning](https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning).

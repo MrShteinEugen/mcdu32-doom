@@ -31,12 +31,7 @@ instructions. Template portions: copyright FlyByWire Simulations, 2021-2023,
 2025. No logos, screenshots, navigation databases or simulator flight logic are
 included. Pages use local state and are not operational flight-management software.
 
-Blocks is an original unbranded mini-game, not a licensed Tetris product.
-No official Tetris code, logos, artwork, music, color assignments or guideline
-implementation is included. Trademark and trade-dress questions are distinct
-from code licensing; changing a name alone is not a legal clearance.
-
-DOOM, Airbus, A320, FlyByWire, WINCTRL/WINWING and Tetris names are used only as
+DOOM, Airbus, A320, FlyByWire, WINCTRL/WINWING names are used only as
 descriptive references to their respective products or organizations. This
 independent project does not claim their endorsement, certification or ownership
 of their marks. No proprietary simulator files or device firmware are included.
