@@ -74,6 +74,12 @@ released on shutdown and startup errors, and closing the command channel stops
 the service. Blocks and its long-slash launch gesture are excluded. These are
 host-only changes; vendored engine and original font files remain unchanged.
 
+Migration update **2026-10-30**, CLI stage: command dispatch, the native Windows
+tray, static probes and launch scripts were moved into the current module
+structure. Both binaries share one application entry point; probe images use
+the shared rasterizer, and launch scripts share build and argument handling.
+These changes do not alter the vendored engine or original font files.
+
 Keep this record with the changed files, update its notice date and descriptions
 when those modifications change, and regenerate the relevant provenance records.
 Do not edit upstream license texts to make a grant appear broader.
