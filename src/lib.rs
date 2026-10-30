@@ -7,5 +7,6 @@ pub mod device;
 pub mod display;
 pub mod doom;
 pub mod input;
+pub mod mcdu;
 pub mod output;
 pub mod runtime;
