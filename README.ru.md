@@ -58,7 +58,7 @@ cargo run --locked -- emulate
 | Геометрия, шрифты и протокол дисплея | [Возможности дисплея](specs/MCDU-display-capabilities.md) |
 | Проверка раскладки и загрузки шрифта | [Диагностическая сетка](docs/grid-probe.md) |
 | Проверка архивов и офлайн-сборка | [Пакеты](docs/packages.md) |
-| Устройство кода, тесты и CI | [Архитектура](docs/architecture.md), [CONTRIBUTING](CONTRIBUTING.md) |
+| Устройство кода, тесты и CI | [Архитектура](docs/architecture.md), [CONTRIBUTING](CONTRIBUTING.md), [CI](docs/ci.md) |
 
 ## Лицензии
 

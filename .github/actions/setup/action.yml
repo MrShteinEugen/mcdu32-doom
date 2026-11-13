@@ -1,0 +1,33 @@
+name: Build prerequisites
+description: Pinned Rust/Python with registry-only caching; no build products cached.
+inputs:
+  toolchain:
+    description: Rust toolchain
+    default: '1.98.1'
+runs:
+  using: composite
+  steps:
+    - name: Install Rust
+      shell: pwsh
+      env:
+        TOOLCHAIN: ${{ inputs.toolchain }}
+      run: |
+        rustup toolchain install "$env:TOOLCHAIN" --profile minimal --no-self-update --component rustfmt --component clippy
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        rustup override set "$env:TOOLCHAIN"
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        rustc -vV
+        cargo --version
+    - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      with:
+        python-version: '3.12'
+    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: |
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+        key: registry-${{ runner.os }}-${{ inputs.toolchain }}-${{ hashFiles('Cargo.lock') }}
+    - name: Fetch immutable locked dependencies
+      shell: pwsh
+      run: cargo fetch --locked

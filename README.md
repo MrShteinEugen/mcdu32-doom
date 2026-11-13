@@ -55,7 +55,7 @@ or `-Wad` in the launcher. The service uses USB by default; `--no-usb` disables 
 | Display geometry, fonts and protocol | [Display capabilities](specs/MCDU-display-capabilities.md) |
 | Grid and font diagnostics | [Static grid probe](docs/grid-probe.md) |
 | Archive verification and offline builds | [Packages](docs/packages.md) |
-| Code structure, tests and automation | [Architecture](docs/architecture.md), [Contributing](CONTRIBUTING.md) |
+| Code structure, tests and automation | [Architecture](docs/architecture.md), [Contributing](CONTRIBUTING.md), [CI](docs/ci.md) |
 
 ## Licensing
 

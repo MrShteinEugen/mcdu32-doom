@@ -1,0 +1,184 @@
+name: CI
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: '0'
+  RUST_BACKTRACE: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+jobs:
+  workflow-policy:
+    name: Workflow and packaging policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - run: python -m pip install PyYAML==6.0.3
+      - run: python scripts/check-ci.py
+      - run: python -m unittest discover -s scripts/tests -v
+      - name: Pinned actionlint, verified archive
+        shell: bash
+        run: |
+          curl --fail --location --proto '=https' --tlsv1.2 -o "$RUNNER_TEMP/actionlint.tar.gz" https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          echo '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  '"$RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -color
+  quality:
+    name: Format, Clippy, docs, provenance
+    runs-on: windows-2022
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --all-features --locked -- -D warnings
+      - run: cargo doc --no-deps --all-features --locked
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - run: ./scripts/validate-docs.ps1
+      - run: ./scripts/validate-licenses.ps1
+      - run: ./scripts/check-powershell.ps1
+      - run: python -m unittest discover -s scripts/tests -v
+      - run: cargo package --locked --allow-dirty
+      - run: ./scripts/prepare-publication.ps1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: source-review-and-rustdoc
+          path: |
+            dist/*.zip
+            target/doc
+          if-no-files-found: warn
+          retention-days: 14
+  windows:
+    name: Windows ${{ matrix.os }} Rust ${{ matrix.rust }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: windows-2022, rust: '1.85.0'}
+          - {os: windows-2022, rust: '1.98.1'}
+          - {os: windows-2025, rust: '1.98.1'}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          toolchain: ${{ matrix.rust }}
+      - run: cargo test --all-targets --locked
+      - run: cargo test --doc --locked
+      - run: cargo build --release --bins --locked
+      - name: Release CLI smoke, no WAD or HID
+        run: |
+          ./target/release/mcdu-doom.exe --help
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./target/release/mcdu-doom.exe --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./target/release/mcdu-doom.exe atlas --out target/ci-atlas
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: windows-evidence-${{ matrix.os }}-${{ matrix.rust }}
+          path: |
+            target/cli-tests
+            target/mcdu-pages
+            target/ci-atlas
+          if-no-files-found: warn
+          retention-days: 14
+  freedoom:
+    name: Real engine and UI, no USB
+    runs-on: windows-2022
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: ./scripts/setup-freedoom.ps1
+      - name: Explicit opt-in list; never hardware tests
+        env:
+          MCDU_UI_CAPTURE_DIR: target/engine-ui
+        run: cargo test --release --locked --test cli --test engine_smoke --test engine_ui --test emulator_smoke --test mcdu_service --test service -- --ignored --test-threads=1
+      - name: Regenerate gallery into isolated output
+        run: ./scripts/capture-readme.ps1 -Out output/ci-gallery
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: freedoom-captures-and-metrics
+          path: |
+            target/cli-tests
+            target/service-tests
+            target/emulator-smoke
+            target/engine-ui
+            output/ci-gallery
+          if-no-files-found: warn
+          retention-days: 14
+  font:
+    name: Reproduce aviation font bitmaps
+    runs-on: windows-2022
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==12.2.0
+      - run: python scripts/build-aircraft-font.py
+      - run: git diff --exit-code -- assets/aircraft-font/bitmap.json
+  portability:
+    name: Linux portability (not a release target)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Native build prerequisites
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev libxrandr-dev libxi-dev
+      - uses: ./.github/actions/setup
+      - run: cargo check --all-targets --locked
+      - run: cargo test --locked
+  gate:
+    name: CI gate
+    if: always()
+    needs: [workflow-policy, quality, windows, freedoom, font, portability]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every check
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: python3 -c 'import json,os; results=json.loads(os.environ["RESULTS"]); assert all(v["result"] == "success" for v in results.values()), results'

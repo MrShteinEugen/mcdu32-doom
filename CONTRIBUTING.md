@@ -14,10 +14,17 @@ cargo test --locked
 cargo build --release --locked
 ```
 
-Ordinary tests do not enumerate HID devices or write to a panel; the ignored
-hardware smoke test requires explicit opt-in and exclusive access. Engine integration tests
-use the pinned Freedoom IWAD. They skip when the IWAD is absent, so run the setup
-script before checking changes; CI always installs it.
+Run the game-data tests explicitly after installing Freedoom:
+
+```powershell
+cargo test --release --locked --test cli --test engine_smoke --test engine_ui --test emulator_smoke --test service --test mcdu_service -- --ignored --test-threads=1
+python -B -m unittest discover -s scripts/tests -v
+.\scripts\check-powershell.ps1
+```
+
+These targets use synthetic input and do not access USB. Test outputs are stored
+under `target/` and `output/`. A missing IWAD fails an explicitly selected fixture
+test. See [CI](docs/ci.md) and [package verification](docs/packages.md).
 
 Keep hardware changes separate from visual or gameplay changes. Font packing,
 glyph addresses, grid commands and packet timing have physical consequences.
