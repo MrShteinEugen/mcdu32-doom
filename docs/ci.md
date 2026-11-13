@@ -40,11 +40,37 @@ The published images remain untouched.
 | `source-review-and-rustdoc` | Verified source ZIP and Rustdoc | 14 days |
 | `windows-evidence-<os>-<rust>` | CLI and probe results, page captures and atlas | 14 days |
 | `freedoom-captures-and-metrics` | PNGs, JSON metrics, engine text and gallery | 14 days |
+| `mcdu-doom-review-packages` | Four ZIPs, `SHA256SUMS.txt`, release manifest and build information | 30 days |
+| `rustsec-report`, `rust-coverage` | RustSec JSON and LCOV | 30 days |
 
 CI uploads diagnostic artifacts even when a job fails, if the files exist.
 For a failed check, start with the failing step and then inspect its output.
 Review changes to protocol contracts, licenses or fonts before updating hashes.
 For a minimum-version failure, check the changed dependencies' `rust-version`.
+
+## Package workflow
+
+[packages.yml](../.github/workflows/packages.yml) runs on `v*` tags or on manual
+request. It runs CI first, then:
+
+1. Requires a clean checkout and checks the tag against the package version.
+2. Creates and verifies the four archives.
+3. Builds from the extracted offline source archive using an empty Cargo home
+   and a separate target directory.
+4. Checks the Windows CLI version and atlas export without WAD or USB access.
+5. Runs the standalone archive verifier and uploads the release files.
+
+The workflow produces artifacts. Publishing a GitHub Release is a separate
+operation. See [packages](packages.md) for local preparation and verification.
+
+## Scheduled checks
+
+[security.yml](../.github/workflows/security.yml) runs Mondays at 05:23 UTC and
+on manual request. `cargo-audit 0.22.2` checks all entries in `Cargo.lock` against
+RustSec. `cargo-llvm-cov 0.9.1` collects LCOV for ordinary Rust tests; the report
+has no minimum coverage threshold. Neither job measures hardware behavior or
+C engine coverage. Dependabot checks Cargo and GitHub Actions weekly, with up to
+five open pull requests per ecosystem.
 
 ## Permissions and caches
 

@@ -1,6 +1,6 @@
 # Release packages
 
-Build packages locally.
+Build packages locally or run the [package workflow](../.github/workflows/packages.yml).
 Each run creates a separate `dist/mcdu-doom-<version>-<id>/` directory.
 See [distribution](publication.md) for the accompanying license records.
 
