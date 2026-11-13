@@ -5,8 +5,7 @@
 Source: https://github.com/ozkl/doomgeneric, revision
 `e257a09527062bfb986b6e5e0780839b6cbd5b71` (2026-10-11).
 The selected C source and header files are vendored under `vendor/doomgeneric`.
-The revision was recovered on 2026-10-20 by matching all 178 pristine downloaded
-files against upstream; 171 vendored files still match and eight are host
+The source record identifies 171 files matching upstream and eight host
 modifications/additions. [Per-file hashes and comparison](docs/engine-provenance.json).
 Builds use checked-in sources and do not fetch a moving branch.
 Most original engine headers grant GPL-2.0-or-later. `sha1.c` is GnuPG code,
@@ -15,16 +14,16 @@ The upstream root LICENSE contains GPLv2; six small/generated files do not have
 individual version grants (`config.h`, `doom.h`, `doomgeneric.c`,
 `doomgeneric.h`, `dummy.c`, `mus2mid.h`). Their project-level notice and version
 interpretation remain explicit review items; no new per-file grant is invented.
-See the [dated audit](docs/legal-review-2026-10-20.md). The new host is GPL-3.0-only.
+See the [review register](docs/licensing/review-register.json). The host is GPL-3.0-only.
 
 Host changes: `i_system.c` routes shutdown and fatal engine errors to the
-without sound, DEHACKED, or multiplayer. The Rust host never concurrently enters
-the engine and does not unwind Rust stack frames using `longjmp`.
+C host boundary. The selected engine build runs without sound, DEHACKED or
+multiplayer. The Rust host never concurrently enters the engine and does not unwind Rust stack frames using `longjmp`.
 
 Display/UI changes: `r_defs.h`, `r_things.c` and `r_main.c` expose clipped sprite
 ownership; `hu_lib.c` and `m_menu.c` export message/menu text; `d_main.c` resets
 the text frame and enforces the full gameplay viewport. `mcdu_text.h` includes
-the host ABI from `src/doom_bridge.h`. Engine game rules are otherwise retained.
+the host ABI from `src/doom/native/doom_bridge.h`. Engine game rules are otherwise retained.
 
 ## mcdu-dotnet font transaction map
 
@@ -64,8 +63,7 @@ The reference checkout is GPLv3; the new application release is licensed
 GPL-3.0-only conservatively. No proprietary SimAppPro executable, aircraft
 database or firmware image is included. GPL text is retained in LICENSES.
 Reference source: https://github.com/rswilem/winctrl-xplane-plugin, by Ramon
-(@rswilem) and the project's contributors. The local research snapshot is excluded
-from publication; the host serializer and changes are included in source.
+(@rswilem) and the project's contributors. The host serializer is included in the source distribution.
 The three-byte and two-byte row variants and the
 grid initialization alternatives are documented in `docs/grid-probe.md`.
 Universal raster forms are
@@ -86,7 +84,6 @@ license and provenance. `scripts/build-aircraft-font.py` regenerates the embedde
 
 The Rust dependency graph and its original license texts are inventoried and
 collected by `scripts/prepare-publication.ps1`, from locked local Cargo metadata.
-The resulting source archive has hashes for its files, not an ownership warranty.
 
 ## Windows dependencies and embedded native code
 
@@ -110,12 +107,8 @@ See [native/file exceptions](docs/licensing/native-components.json) and
 [HIDAPI's upstream licensing statement](https://github.com/libusb/hidapi/blob/master/LICENSE.txt).
 
 `minifb` 0.29.0's reviewed build script does not compile its native macOS/Posix
-sources on Windows. Other targets/features, toolchain/runtime distribution and
-complete source for a future binary require their own review. Current package
-declarations and captured notice hashes do not constitute that review.
+sources on Windows. For other targets or feature sets, see the [scope of license verification](docs/licensing/verification.md).
 
 [License policy](LICENSE-POLICY.md), [dated modifications](MODIFICATIONS.md)
-and [unresolved review register](docs/licensing/review-register.json) define the
-current preparation scope. No dependency source is claimed to be bundled merely
-because its license texts or Cargo.lock are present.
-
+and the [review register](docs/licensing/review-register.json) document the
+applicable terms, adaptations and open items.

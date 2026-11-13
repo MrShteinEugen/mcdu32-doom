@@ -6,7 +6,7 @@ unresolved scope/version matters are recorded, not overridden by this notice.
 There is no warranty, including merchantability or fitness for a particular
 purpose. Original contributions are attributed to their contributors; this
 notice does not claim exclusive ownership of third-party work or remove any
-existing rights. Earlier GPL-2.0-or-later grants remain valid for earlier code.
+existing rights. Existing GPL-2.0-or-later grants remain valid for the corresponding code.
 
 DOOM/Chocolate Doom files in `vendor/doomgeneric` retain GPL-2.0-or-later notices,
 including id Software and Simon Howard copyrights. `sha1.c` retains its GnuPG
@@ -38,8 +38,7 @@ of their marks. No proprietary simulator files or device firmware are included.
 
 Rust dependencies retain their own licenses. The publication preparation script
 creates a versioned inventory and copies available license/notice texts into the
-source archive. It does not itself prove all rights have been cleared. See
-`docs/publication.md` for scope, remaining review items and binary-release duties.
+source archive. See the [distribution guide](docs/publication.md) for release requirements.
 
 The Windows build statically compiles native HIDAPI carried by hidapi-rs 2.6.7.
 Native HIDAPI offers three alternatives; the BSD-3-Clause alternative is selected.
@@ -50,5 +49,4 @@ build.rs also retains an individual GPL-3.0-or-later header. Neither is silently
 replaced by the other's declaration. See docs/licensing/native-components.json.
 
 The consolidated [modification notice](MODIFICATIONS.md) is dated 2026-10-20.
-The [review register](docs/licensing/review-register.json) remains unresolved;
-these materials are not a legal-clearance certificate.
+The [license policy](LICENSE-POLICY.md) links to the open items in the rights review.

@@ -1,10 +1,9 @@
 # Third-party modification record
 
-Notice recorded **2026-10-20** for the current source snapshot. The changes below
-were present by this date. This is the date of this consolidated notice, not an
-invented date for each historical edit. There is no local Git history to establish
-earlier per-edit dates. These files are modified versions, not upstream originals.
-This record accompanies distribution under GPLv3 section 5(a).
+This record identifies the application’s changes to third-party material.
+The consolidated notice date is **2026-10-20**. Original copyright and license
+notices remain with the affected files. This notice accompanies distribution
+under GPLv3 section 5(a).
 
 ## Vendored DOOM engine
 
@@ -58,28 +57,3 @@ No IWAD is included. Freedoom framebuffer captures, glyph/contrast/ASCII
 transformations, comparison layouts and aircraft captures are identified
 in [image notices](docs/images/LICENSE.md) and [generation metadata](docs/images/gallery.json).
 Underlying Freedoom artwork is not relabeled as the host author's exclusive work.
-
-## Future changes
-
-Migration update **2026-10-26**: host Rust modules and the C bridge were moved
-into domain directories. ABI data and rendering were separated, shared glyph
-sampling and capture helpers were extracted, and emulator validation and PNG
-finalization were strengthened. The explicit C source list preserves the MVP
-build inputs. Vendored engine files retain the exact bytes recorded in
-`docs/engine-provenance.json`; this migration does not add further engine changes.
-
-Migration update **2026-10-30**: MCDU/DOOM service orchestration and navigation
-were moved into `src/service/`. Pause handling is shared, input ownership is
-released on shutdown and startup errors, and closing the command channel stops
-the service. Blocks and its long-slash launch gesture are excluded. These are
-host-only changes; vendored engine and original font files remain unchanged.
-
-Migration update **2026-10-30**, CLI stage: command dispatch, the native Windows
-tray, static probes and launch scripts were moved into the current module
-structure. Both binaries share one application entry point; probe images use
-the shared rasterizer, and launch scripts share build and argument handling.
-These changes do not alter the vendored engine or original font files.
-
-Keep this record with the changed files, update its notice date and descriptions
-when those modifications change, and regenerate the relevant provenance records.
-Do not edit upstream license texts to make a grant appear broader.
