@@ -1,6 +1,6 @@
 # MCDU DOOM
 
-[Русская версия](README.ru.md) · [Running](docs/running.md) · [Gallery](docs/screenshots.md) · Packages
+[Русская версия](README.ru.md) · [Running](docs/running.md) · [Gallery](docs/screenshots.md) · [Packages](docs/packages.md)
 
 Play DOOM on the WINCTRL MCDU-32. The application combines the game,
 standalone MCDU pages and a Windows tray menu. Use the emulator to play
@@ -20,7 +20,7 @@ contrast glyphs and color ASCII. See the [gallery](docs/screenshots.md).
 
 ## Quick start
 
-See Packages for the Windows x64 build. Building from source
+See [Packages](docs/packages.md) for the Windows x64 build. Building from source
 requires PowerShell 7, Rust 1.85 or later, MSVC C++ Build Tools and the Windows SDK.
 
 ```powershell
@@ -54,7 +54,7 @@ or `-Wad` in the launcher. The service uses USB by default; `--no-usb` disables 
 | Rendering modes and MCDU pages | [Gallery](docs/screenshots.md) |
 | Display geometry, fonts and protocol | [Display capabilities](specs/MCDU-display-capabilities.md) |
 | Grid and font diagnostics | [Static grid probe](docs/grid-probe.md) |
-| Archive verification and offline builds | Packages |
+| Archive verification and offline builds | [Packages](docs/packages.md) |
 | Code structure, tests and automation | [Architecture](docs/architecture.md), [Contributing](CONTRIBUTING.md) |
 
 ## Licensing

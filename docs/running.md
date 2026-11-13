@@ -3,7 +3,7 @@
 Run these commands from the repository root in PowerShell 7. Building from
 source requires Rust 1.85 or later, MSVC C++ Build Tools and the Windows SDK.
 The Windows x64 package requires the Microsoft Visual C++ v14 x64 runtime
-(`VCRUNTIME140.dll`). See packages.
+(`VCRUNTIME140.dll`). See [packages](packages.md).
 
 ```powershell
 .\scripts\setup-freedoom.ps1

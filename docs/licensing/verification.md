@@ -34,7 +34,7 @@ case collisions and parent-directory traversal. Run it with:
 python -B -m unittest discover -s scripts/tests -v
 ```
 
-Package verification documents archive commands and offline
+[Package verification](../packages.md) documents archive commands and offline
 rebuilds. Hash verification establishes file integrity; it is not a signature
 or a grant of rights. The [review register](review-register.json) remains the
 source of open items and resolution criteria.

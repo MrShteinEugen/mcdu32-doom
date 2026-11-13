@@ -33,5 +33,5 @@ font sources and generators with the corresponding material. The offline source
 archive is paired with the Windows build by SHA-256. Assess the applicable source,
 runtime and notice obligations for the intended distribution.
 
-See [distribution](../publication.md), package contents,
+See [distribution](../publication.md), [package contents](../packages.md),
 [verification](verification.md), and [image notices](../images/LICENSE.md).

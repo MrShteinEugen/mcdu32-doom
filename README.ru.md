@@ -1,6 +1,6 @@
 # MCDU DOOM
 
-[English](README.md) · [Запуск и управление](docs/running.md) · [Галерея](docs/screenshots.md) · Пакеты
+[English](README.md) · [Запуск и управление](docs/running.md) · [Галерея](docs/screenshots.md) · [Пакеты](docs/packages.md)
 
 DOOM на дисплее WINCTRL MCDU-32! Приложение объединяет игру,
 самостоятельные страницы MCDU и Windows-трей.
@@ -20,7 +20,7 @@ DOOM на дисплее WINCTRL MCDU-32! Приложение объединя�
 
 ## Быстрый запуск
 
-Готовая Windows x64-сборка описана в руководстве пакетов.
+Готовая Windows x64-сборка описана в [руководстве пакетов](docs/packages.md).
 Для сборки из исходников нужны PowerShell 7, Rust 1.85+ и MSVC C++ Build Tools
 с Windows SDK.
 
@@ -57,7 +57,7 @@ cargo run --locked -- emulate
 | Режимы изображения и страницы MCDU | [Галерея](docs/screenshots.md) |
 | Геометрия, шрифты и протокол дисплея | [Возможности дисплея](specs/MCDU-display-capabilities.md) |
 | Проверка раскладки и загрузки шрифта | [Диагностическая сетка](docs/grid-probe.md) |
-| Проверка архивов и офлайн-сборка | Пакеты |
+| Проверка архивов и офлайн-сборка | [Пакеты](docs/packages.md) |
 | Устройство кода, тесты и CI | [Архитектура](docs/architecture.md), [CONTRIBUTING](CONTRIBUTING.md) |
 
 ## Лицензии

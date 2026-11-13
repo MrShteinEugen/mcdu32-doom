@@ -5,7 +5,9 @@ edition = "2024"
 rust-version = "1.85"
 license = "GPL-3.0-only"
 description = "DOOM framebuffer adapter for WINCTRL Airbus MCDU-32"
+readme = "README.md"
 default-run = "mcdu-doom"
+include = ["/src/**", "/tests/**", "/examples/**", "/assets/**", "/vendor/doomgeneric/**", "/docs/**", "/specs/**", "/scripts/**", "/.github/**", "/build.rs", "/Cargo.toml", "/Cargo.lock", "/LICENSE", "/LICENSES/**", "/LICENSE-POLICY.md", "/MODIFICATIONS.md", "/NOTICE.md", "/THIRD_PARTY.md", "/CONTRIBUTING.md", "/README.md", "/README.ru.md", "/run.ps1", "/probe-grid.ps1", "/rustfmt.toml", "/.editorconfig", "/.gitattributes", "/.gitignore"]
 
 [dependencies]
 anyhow = "1.0"

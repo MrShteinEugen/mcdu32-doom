@@ -1,6 +1,6 @@
 # Distribution
 
-Release packaging is described in Packages. This document covers
+Release packaging is described in [Packages](packages.md). This document covers
 the notices, source material and review records that accompany distribution.
 
 ## License records

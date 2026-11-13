@@ -55,7 +55,7 @@ Assess System Library exclusions for the actual components rather than treating
 all native code as exempt. Installation Information is also required where the
 User Product provisions apply. Preserve appropriate interactive legal notices
 where required by section 5(d). See [distribution records](docs/publication.md)
-and package contents.
+and [package contents](docs/packages.md).
 
 ## Other rights
 
