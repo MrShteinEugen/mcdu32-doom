@@ -16,15 +16,15 @@
       "status": "unresolved",
       "scope": "Source redistribution and GPLv3 combined engine/host",
       "files": ["vendor/doomgeneric/config.h", "vendor/doomgeneric/doom.h", "vendor/doomgeneric/doomgeneric.c", "vendor/doomgeneric/doomgeneric.h", "vendor/doomgeneric/dummy.c", "vendor/doomgeneric/mus2mid.h"],
-      "evidence": ["docs/engine-provenance.json", "vendor/doomgeneric/LICENSE"],
+      "evidence": ["docs/engine-provenance.json", "vendor/doomgeneric/LICENSE", "docs/licensing/release-rights-review.md"],
       "resolution_required": "Documented grant/history or qualified assessment establishing applicable scope/version and GPLv3-compatible redistribution. Do not infer or-later from neighboring files.",
       "resolution_evidence": []
     },
     {
       "id": "PRESENTATION",
       "status": "unresolved",
-      "scope": "Actual branding, aircraft UI and Blocks presentation in intended jurisdictions",
-      "evidence": ["docs/images/LICENSE.md", "docs/screenshots.md", "THIRD_PARTY.md"],
+      "scope": "Actual branding, aircraft UI and published imagery in intended jurisdictions",
+      "evidence": ["docs/images/LICENSE.md", "docs/screenshots.md", "THIRD_PARTY.md", "docs/licensing/release-rights-review.md"],
       "resolution_required": "Release-owner/counsel assessment of actual naming, visuals and distribution; separate permissions if necessary. Renaming alone is not clearance.",
       "resolution_evidence": []
     },
@@ -32,7 +32,7 @@
       "id": "OWNER-CONTRACTS",
       "status": "unresolved",
       "scope": "Authority over new contributions, employment/contract rights, hardware agreements and applicable law",
-      "evidence": ["CONTRIBUTING.md", "NOTICE.md"],
+      "evidence": ["CONTRIBUTING.md", "NOTICE.md", "docs/licensing/release-rights-review.md"],
       "resolution_required": "Real release owner/contact and documented authority; review applicable agreements/local obligations. No author identity is fabricated.",
       "resolution_evidence": []
     },
@@ -40,7 +40,7 @@
       "id": "BINARY-SOURCE",
       "status": "not-assessed-for-binary-release",
       "scope": "Future binary distribution only; current archive is source-only",
-      "evidence": ["LICENSE-POLICY.md", "docs/publication.md"],
+      "evidence": ["LICENSE-POLICY.md", "docs/publication.md", "docs/licensing/release-rights-review.md"],
       "resolution_required": "Review exact binary/build/linked code, complete Corresponding Source and notices, distribution method, interactive legal notices and Installation Information where applicable.",
       "resolution_evidence": []
     }

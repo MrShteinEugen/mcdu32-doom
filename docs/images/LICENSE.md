@@ -25,14 +25,12 @@ Fonts: HoneywellMCDU and HoneywellMCDUSmall, Copyright (c) 2021 Tyler Knox;
 FlyByWire page-template portions, Copyright (c) 2021–2023, 2025 FlyByWire
 Simulations. [Font sources, full license and modifications](../../assets/aircraft-font/NOTICE.md)
 are supplied alongside the [GPLv3 text](../../LICENSE).
-No font exception was found in the supplied upstream font files/notice;
-do not assume a permissive screenshot/font exception or remove the font attribution.
+The supplied font license has no font exception; retain its attribution.
 
 The Rust capture source, bitmap-generation script and original FontForge sources
 are included in this repository. [Capture method](../screenshots.md),
 [source metadata](gallery.json) and [PNG SHA-256 values](image-hashes.json)
-make the published set identifiable. No actual contributor/rights-holder identity
-is invented for the host's new work; release owners should retain real authorship records.
+make the published set identifiable. Preserve the accompanying attribution and copyright notices.
 
 Product names describe compatibility. No trademark license, endorsement,
 certification or guarantee against claims is asserted.

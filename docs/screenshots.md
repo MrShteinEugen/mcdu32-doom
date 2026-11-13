@@ -1,63 +1,49 @@
-# Screenshot gallery
+# Gallery
 
-The game images use **Freedoom Phase 1 0.13.0**, rendered by the vendored engine.
-They do not contain commercial DOOM game data. The comparison panels are
-software captures, not physical-panel photographs or LCD-FPS measurements.
+The images show software captures using Freedoom Phase 1 0.13.0.
+See the [image notices](images/LICENSE.md) for attribution and terms.
 
-## One frame, four renderers
+## Game rendering modes
 
-Spawn room: original engine frame, color glyphs, contrast glyphs, color ASCII
+![Starting room in four renderings](images/foyer-comparison.png)
 
-Enemy encounter: the same four renderers, including the source damage flash
+![Enemy encounter in four renderings](images/encounter-comparison.png)
 
-Each sheet uses one immutable `Frame` for all four tiles. The source damage/pickup
-palette effects are retained; the contrast renderer deliberately neutralizes scenery
-and emphasizes visible enemies. The original 320 × 200 source is enlarged exactly
-2× using nearest-neighbor sampling in the sheet, without aspect-ratio correction.
-The other tiles retain their native 583 × 434 raster. Captions and padding are
-presentation only. Individual PNGs contain neither the captions nor the padding.
+Each sheet uses one engine frame. The top row shows the original and color
+glyphs; the bottom row shows contrast glyphs and color ASCII. The contrast mode
+reduces background color and emphasizes visible enemies.
 
-| Scene           | Engine framebuffer | Color glyphs | Contrast glyphs | Color ASCII |
-|-----------------|--------------------|--------------|-----------------|-------------|
-| Spawn room      | 320 × 200          | 583 × 434    | 583 × 434       | 583 × 434   |
-| Enemy encounter | 320 × 200          | 583 × 434    | 583 × 434       | 583 × 434   |
+The 320 × 200 original is scaled by two. Glyph renderings are 583 × 434 pixels.
+Captions and margins appear only on the comparison sheets.
 
-Source frame generations, fingerprints, visible-enemy pixel counts, actual packet
-counts and one-off render timings are in [gallery.json](images/gallery.json).
-Those single-sample timings are not a benchmark or a hardware presentation rate.
+## MCDU pages
 
-## Aircraft pages
+| MCDU MENU | INIT |
+| --- | --- |
+| ![MCDU MENU](images/mcdu-menu.png) | ![INIT](images/mcdu-init.png) |
 
-| MCDU MENU, red DOOM entry at L5 | INIT |
-|---------------------------------|------|
-| MCDU MENU                       | INIT |
+| PERF | PROG |
+| --- | --- |
+| ![PERF](images/mcdu-perf.png) | ![PROG](images/mcdu-prog.png) |
 
-| TAKE OFF | PROG |
-|----------|------|
-| PERF     | PROG |
+![RADIO NAV](images/mcdu-radio.png)
 
-RADIO NAV, full raster.
-Aircraft screenshots use the actual 24 × 14 font/grid and local page state.
-Fonts and template references are credited in [the font notice](../assets/aircraft-font/NOTICE.md).
+Pages use a 24 × 14 grid and separate large and small
+[aircraft fonts](../assets/aircraft-font/NOTICE.md).
 
-## Recreate the images
-
-From the repository root on Windows:
+## Reproduce the captures
 
 ```powershell
 .\scripts\setup-freedoom.ps1
 .\scripts\capture-readme.ps1
 ```
 
-The script verifies the pinned Phase 1 IWAD SHA-256, runs the Rust
-`readme_gallery` example and writes PNG hashes
-to [image-hashes.json](images/image-hashes.json). It opens no window or USB device
-and does not modify the tray service's files. The engine is live, so the exact
-frame chosen and timing samples can vary between runs; comparisons within a run
-always use the same source snapshot. The scripted player walks, turns and pulses
-USE to open doors; no game assets or framebuffer pixels are painted in afterwards.
+The capture script verifies the IWAD, runs `readme_gallery` without windows or
+USB, and writes PNGs and their SHA-256 values. Use `-Out output/gallery` for a
+separate destination. Frames and timings can vary between runs because the
+engine runs in real time. Each comparison uses the same captured frame for all
+four renderings.
 
-If no enemy is found, capture fails before replacing the published gallery;
-retry it instead of presenting an empty view as an enemy example. The checked-in
-gallery contains an actual encounter. Preserve [licenses and credits](images/LICENSE.md)
-when reusing any screenshot.
+[gallery.json](images/gallery.json) records frame metadata, timings and packet
+counts. [image-hashes.json](images/image-hashes.json) lists the published PNG
+checksums. Render timings measure software execution rather than LCD refresh.

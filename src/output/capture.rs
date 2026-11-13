@@ -83,8 +83,8 @@ impl Capture {
 /// Render both styles from exactly the same source frame for visual comparison.
 pub fn save_style_comparison(
     atlas: &Atlas,
-    frame: &crate::doom::engine::Frame,
-    geometry: crate::display::Geometry,
+    frame: &Frame,
+    geometry: Geometry,
     out: &Path,
 ) -> Result<()> {
     let width = geometry.width();
