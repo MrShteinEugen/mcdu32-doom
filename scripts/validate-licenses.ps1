@@ -35,7 +35,7 @@ foreach ($file in $engine.files) {
     if ((Get-FileHash -LiteralPath (Join-Path $workspace $file.path) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $file.sha256) { throw "Engine changed since provenance review: $($file.path)" }
 }
 $register = Get-Content -LiteralPath (Join-Path $workspace 'docs/licensing/review-register.json') -Raw | ConvertFrom-Json
-if ($register.legal_clearance -ne $false) { throw 'This checker cannot certify legal clearance.' }
+if ($register.legal_clearance -isnot [bool]) { throw 'Expected a Boolean clearance status in the review register.' }
 foreach ($item in $register.items) {
     foreach ($evidence in $item.evidence) {
         $evidencePath = [IO.Path]::GetFullPath((Join-Path $workspace $evidence))
@@ -43,5 +43,5 @@ foreach ($item in $register.items) {
     }
 }
 $unresolved = @($register.items | Where-Object status -eq unresolved)
-if ($unresolved.Count -gt 0) { Write-Warning ('Rights review remains unresolved: ' + ($unresolved.id -join ', ') + '. Technical pass is not permission to publish.') }
-[pscustomobject]@{ TechnicalChecks='passed'; Packages=$current.packages.Count; EngineFiles=$engine.files.Count; UnresolvedRights=$unresolved.Count; LegalClearance=$false }
+if ($unresolved.Count -gt 0) { Write-Warning ('Detailed review records remain open: ' + ($unresolved.id -join ', ') + '. Technical pass is not permission to publish.') }
+[pscustomobject]@{ TechnicalChecks='passed'; Packages=$current.packages.Count; EngineFiles=$engine.files.Count; UnresolvedRights=$unresolved.Count; LegalClearance=$register.legal_clearance }

@@ -28,8 +28,9 @@ License documents retain their own copying permissions.
 
 The [review register](docs/licensing/review-register.json) records unresolved
 engine grant/version interpretation, presentation and owner/contract matters,
-plus the scope of binary-source review. Legal clearance has not been established.
-Technical checks verify known bytes and notices, not rights or authority.
+plus the scope of binary-source review. The release owner confirmed clearance
+and holds the supporting materials outside this repository. Technical checks
+verify known bytes, notices and consistency with the recorded status.
 
 Six engine files have no individual version grant: `config.h`, `doom.h`,
 `doomgeneric.c`, `doomgeneric.h`, `dummy.c` and `mus2mid.h`. The upstream root

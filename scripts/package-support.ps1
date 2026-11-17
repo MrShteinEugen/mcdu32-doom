@@ -33,10 +33,10 @@ function New-ReproducibleArchive {
 }
 
 function Write-ArtifactManifest {
-    param([string]$Directory, [string]$Kind, [string]$Version, [string]$SourceHash)
+    param([string]$Directory, [string]$Kind, [string]$Version, [string]$SourceHash, [bool]$LegalClearance)
     [ordered]@{
         schema_version = 1; kind = $Kind; version = $Version; target = 'x86_64-pc-windows-msvc'
-        source_archive_sha256 = $SourceHash; legal_clearance = $false
+        source_archive_sha256 = $SourceHash; legal_clearance = $LegalClearance
         files = @(Get-PackageFiles -Directory $Directory)
     } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $Directory 'ARTIFACT-MANIFEST.json') -Encoding utf8
 }

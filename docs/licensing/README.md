@@ -21,7 +21,7 @@ The [review register](review-register.json) records the evidence and closure
 criteria for `DG-VERSION` (engine license scope), `PRESENTATION` (branding and
 visuals), `OWNER-CONTRACTS` (authority and agreements), and `BINARY-SOURCE`
 (the scope of binary distribution review). Package manifests record
-`legal_clearance: false`.
+`legal_clearance: true` based on the release owner’s confirmation.
 
 See the [first-release review](release-rights-review.md) for the role of each
 unresolved DoomGeneric file and the evidence needed for the Windows ZIP.

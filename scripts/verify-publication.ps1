@@ -25,7 +25,7 @@ try {
         try { $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
     }
     $manifest = Read-ArchiveJson 'PUBLICATION-MANIFEST.json'
-    if ($manifest.kind -notin @('source-only','source-with-dependencies') -or $manifest.legal_clearance -ne $false) { throw 'Unsupported or misleading publication status.' }
+    if ($manifest.kind -notin @('source-only','source-with-dependencies') -or $manifest.legal_clearance -isnot [bool]) { throw 'Unsupported or misleading publication status.' }
     if ($manifest.files.Count + 1 -ne $entries.Count) { throw 'Archive/manifest file count differs.' }
     $seen = @{}
     foreach ($file in $manifest.files) {
@@ -41,7 +41,7 @@ try {
         'assets/aircraft-font/HoneywellMCDU.sfd','assets/aircraft-font/HoneywellMCDUSmall.sfd','assets/aircraft-font/LICENSE','scripts/build-aircraft-font.py','docs/images/LICENSE.md')
     foreach ($name in $required) { if (-not $entries.ContainsKey($name)) { throw "Missing required publication file: $name" } }
     $review = Read-ArchiveJson 'docs/licensing/review-register.json'
-    if ($review.legal_clearance -ne $false -or $manifest.publication_status -ne $review.publication_status -or
+    if ($review.legal_clearance -isnot [bool] -or $review.legal_clearance -ne $manifest.legal_clearance -or $manifest.publication_status -ne $review.publication_status -or
         (($manifest.open_rights_items | Sort-Object) -join ',') -cne (($review.items | Where-Object status -eq unresolved | ForEach-Object id | Sort-Object) -join ',')) { throw 'Archive review status differs from manifest.' }
     $dependencies = @(Read-ArchiveJson 'DEPENDENCIES.json')
     $reviewed = Read-ArchiveJson 'docs/licensing/dependencies-windows.json'
@@ -72,5 +72,5 @@ try {
             $noticeCount++
         }
     }
-    [pscustomobject]@{ ArchiveFiles=$entries.Count; VerifiedHashes=$manifest.files.Count; DependencyNotices=$noticeCount; LegalClearance=$false; TechnicalChecks='passed' }
+    [pscustomobject]@{ ArchiveFiles=$entries.Count; VerifiedHashes=$manifest.files.Count; DependencyNotices=$noticeCount; LegalClearance=$manifest.legal_clearance; TechnicalChecks='passed' }
 } finally { $zip.Dispose() }

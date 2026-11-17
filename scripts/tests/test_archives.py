@@ -29,7 +29,7 @@ spec.loader.exec_module(verifier)
 class ArchiveTests(unittest.TestCase):
     def make_archive(self, directory, *, content=b'content', record_content=b'content', extra=None):
         path = Path(directory) / 'archive.zip'
-        manifest = {'kind': 'symbols', 'legal_clearance': False, 'files': [
+        manifest = {'kind': 'symbols', 'legal_clearance': True, 'files': [
             {'path': 'file.txt', 'sha256': hashlib.sha256(record_content).hexdigest(), 'bytes': len(record_content)}]}
         with zipfile.ZipFile(path, 'w') as archive:
             archive.writestr('file.txt', content)

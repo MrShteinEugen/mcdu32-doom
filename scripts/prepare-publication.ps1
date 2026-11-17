@@ -82,12 +82,12 @@ try {
     $hashes = @(Get-ChildItem -LiteralPath $stage -Recurse -File -Force | Sort-Object FullName | ForEach-Object {
         [ordered]@{ path=[IO.Path]::GetRelativePath($stage,$_.FullName).Replace('\','/'); sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() }
     })
-    [ordered]@{ kind=$(if ($BundleDependencies) {'source-with-dependencies'} else {'source-only'}); target=$Target; application_license='GPL-3.0-only'; license_policy='LICENSE-POLICY.md'; modification_record='MODIFICATIONS.md'; dependency_count=$inventory.Count; other_target_metadata_count=$otherTargets.Count; secret_scan='limited-pattern-check'; legal_clearance=$false; publication_status=$rightsRegister.publication_status; rights_review='docs/licensing/README.md'; review_register='docs/licensing/review-register.json'; open_rights_items=@($rightsRegister.items | Where-Object status -eq unresolved | ForEach-Object id); binary_corresponding_source=$(if ($BundleDependencies) {'dependency sources included; toolchain and system libraries external; rights review unresolved'} else {'not-assessed; dependency source is not bundled'}); files=$hashes } |
+    [ordered]@{ kind=$(if ($BundleDependencies) {'source-with-dependencies'} else {'source-only'}); target=$Target; application_license='GPL-3.0-only'; license_policy='LICENSE-POLICY.md'; modification_record='MODIFICATIONS.md'; dependency_count=$inventory.Count; other_target_metadata_count=$otherTargets.Count; secret_scan='limited-pattern-check'; legal_clearance=$rightsRegister.legal_clearance; publication_status=$rightsRegister.publication_status; rights_review='docs/licensing/README.md'; review_register='docs/licensing/review-register.json'; open_rights_items=@($rightsRegister.items | Where-Object status -eq unresolved | ForEach-Object id); binary_corresponding_source=$(if ($BundleDependencies) {'dependency sources included; toolchain and system libraries external'} else {'not-assessed; dependency source is not bundled'}); files=$hashes } |
         ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stage 'PUBLICATION-MANIFEST.json') -Encoding utf8
     $archive = $stage + '.zip'
     # ZipFile includes .github/.gitignore, unlike wildcard-based archive commands.
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     New-ReproducibleArchive -Directory $stage -Archive $archive
     & (Join-Path $PSScriptRoot 'verify-publication.ps1') -Archive $archive | Out-Host
-    [pscustomobject]@{ Directory=$stage; Archive=$archive; Files=$hashes.Count; Dependencies=$inventory.Count; SHA256=(Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash; LegalClearance=$false }
+    [pscustomobject]@{ Directory=$stage; Archive=$archive; Files=$hashes.Count; Dependencies=$inventory.Count; SHA256=(Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash; LegalClearance=$rightsRegister.legal_clearance }
 } finally { Pop-Location }

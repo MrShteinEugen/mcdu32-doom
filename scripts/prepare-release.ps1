@@ -21,6 +21,7 @@ try {
     $source = & (Join-Path $PSScriptRoot 'prepare-publication.ps1') -Destination (Join-Path $release 'staging')
     $offline = & (Join-Path $PSScriptRoot 'prepare-publication.ps1') -Destination (Join-Path $release 'staging') -BundleDependencies
     Copy-Item -LiteralPath $source.Archive -Destination (Join-Path $release "mcdu-doom-$version-source.zip")
+    $legalClearance = $source.LegalClearance
     $offlineName = "mcdu-doom-$version-source-offline.zip"
     Copy-Item -LiteralPath $offline.Archive -Destination (Join-Path $release $offlineName)
     $sourceHash = (Get-FileHash -LiteralPath (Join-Path $release $offlineName) -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -52,8 +53,8 @@ in tray/service mode. Full build sources are in the adjacent $offlineName archiv
 its SHA-256 is $sourceHash. Extract it, install Rust/MSVC, and run
 cargo build --release --locked --offline --bins --target x86_64-pc-windows-msvc.
 Rust, MSVC and Windows SDK are external build prerequisites, not bundled tools.
-This is an unsigned review artifact. Legal clearance and physical-panel acceptance
-have not been established; see LICENSE-POLICY.md and docs/licensing/review-register.json.
+This package is unsigned. See docs/licensing/review-register.json for the recorded
+publication status and LICENSE-POLICY.md for distribution terms.
 "@)
     $inventory = Get-Content -LiteralPath (Join-Path $source.Directory 'DEPENDENCIES.json') -Raw | ConvertFrom-Json
     $components = @($inventory | ForEach-Object {
@@ -64,20 +65,20 @@ have not been established; see LICENSE-POLICY.md and docs/licensing/review-regis
         version=$version; commit=$commit; dirty=($dirty.Count -ne 0); target='x86_64-pc-windows-msvc'
         rustc=@(& rustc -vV); cargo=(& cargo --version); os=[Environment]::OSVersion.VersionString
         profile='release'; external_runtime='Microsoft Visual C++ v14 x64 runtime (VCRUNTIME140.dll); not bundled'; cargo_lock_sha256=(Get-FileHash Cargo.lock -Algorithm SHA256).Hash.ToLowerInvariant()
-        source_archive=$offlineName; source_archive_sha256=$sourceHash; legal_clearance=$false
+        source_archive=$offlineName; source_archive_sha256=$sourceHash; legal_clearance=$legalClearance
         vcs_tools_version=$env:VCToolsVersion; windows_sdk_version=$env:WindowsSDKVersion
         build_command='cargo build --release --locked --offline --bins --target x86_64-pc-windows-msvc'
     } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $portable 'BUILD-INFO.json') -Encoding utf8
     Copy-Item -LiteralPath (Join-Path $portable 'BUILD-INFO.json') -Destination $release
     foreach ($kind in @('portable','symbols')) {
         $directory = Join-Path $release "staging/$kind"
-        Write-ArtifactManifest -Directory $directory -Kind $kind -Version $version -SourceHash $sourceHash
+        Write-ArtifactManifest -Directory $directory -Kind $kind -Version $version -SourceHash $sourceHash -LegalClearance $legalClearance
         New-ReproducibleArchive -Directory $directory -Archive (Join-Path $release "mcdu-doom-$version-windows-x86_64-$kind.zip")
     }
     $artifacts = @(Get-ChildItem -LiteralPath $release -Filter '*.zip' -File | Sort-Object Name | ForEach-Object { [ordered]@{name=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant();bytes=$_.Length} })
-    [ordered]@{schema_version=1;version=$version;commit=$commit;dirty=($dirty.Count -ne 0);legal_clearance=$false;artifacts=$artifacts} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $release 'RELEASE-MANIFEST.json') -Encoding utf8
+    [ordered]@{schema_version=1;version=$version;commit=$commit;dirty=($dirty.Count -ne 0);legal_clearance=$legalClearance;artifacts=$artifacts} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $release 'RELEASE-MANIFEST.json') -Encoding utf8
     Get-ChildItem -LiteralPath $release -File | Where-Object Name -ne SHA256SUMS.txt | Sort-Object Name | ForEach-Object { (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $_.Name } | Set-Content -LiteralPath (Join-Path $release 'SHA256SUMS.txt') -Encoding utf8
     & python (Join-Path $PSScriptRoot 'verify-release.py') $release | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Release verification failed.' }
-    [pscustomobject]@{Directory=$release;Version=$version;Source=(Join-Path $release $offlineName);Portable=$portable;LegalClearance=$false}
+    [pscustomobject]@{Directory=$release;Version=$version;Source=(Join-Path $release $offlineName);Portable=$portable;LegalClearance=$legalClearance}
 } finally { Pop-Location }

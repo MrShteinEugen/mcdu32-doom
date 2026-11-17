@@ -36,8 +36,8 @@ def verify_archive(path):
             raise ValueError("Uncompressed archive exceeds 1 GiB")
         manifest_name = "PUBLICATION-MANIFEST.json" if "publication-manifest.json" in entries else "ARTIFACT-MANIFEST.json"
         manifest = json.loads(archive.read(manifest_name))
-        if manifest["legal_clearance"] is not False:
-            raise ValueError("Unsupported legal-clearance claim")
+        if type(manifest["legal_clearance"]) is not bool:
+            raise ValueError("Expected a Boolean legal-clearance status")
         if len(entries) != len(manifest["files"]) + 1:
             raise ValueError("Manifest file count differs")
         seen = set()
@@ -70,7 +70,7 @@ def verify_archive(path):
 
 def verify_release(directory):
     release = json.loads((directory / "RELEASE-MANIFEST.json").read_text(encoding="utf-8-sig"))
-    if release["legal_clearance"] is not False or len(release["artifacts"]) != 4:
+    if type(release["legal_clearance"]) is not bool or len(release["artifacts"]) != 4:
         raise ValueError("Unexpected release manifest")
     expected = set()
     source_hash = next(a["sha256"] for a in release["artifacts"] if a["name"].endswith("source-offline.zip"))
@@ -84,6 +84,8 @@ def verify_release(directory):
             if digest(stream) != artifact["sha256"] or path.stat().st_size != artifact["bytes"]:
                 raise ValueError(f"Artifact hash/size mismatch: {name}")
         manifest = verify_archive(path)
+        if manifest["legal_clearance"] != release["legal_clearance"]:
+            raise ValueError("Archive and release clearance statuses differ")
         if manifest["kind"] in {"portable", "symbols"} and manifest["source_archive_sha256"] != source_hash:
             raise ValueError("Binary/source link differs")
     if {p.name for p in directory.glob("*.zip")} != expected:

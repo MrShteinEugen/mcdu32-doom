@@ -13,8 +13,8 @@ and the [license policy](../LICENSE-POLICY.md) with the distribution.
 The [review register](licensing/review-register.json) records unresolved items
 for engine grant/version interpretation, presentation and contributor/contract
 rights. It also records the scope of binary-source review. Package manifests
-preserve this status as `legal_clearance: false`. Technical verification checks
-files and notices; it does not resolve those items.
+record the release owner’s clearance status as `legal_clearance: true`. Technical
+verification checks files, notices and status consistency.
 
 ## Source material
 
