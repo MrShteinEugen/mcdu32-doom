@@ -91,6 +91,34 @@ fn console_service_stops_and_captures_aircraft_page_without_usb() {
 }
 
 #[test]
+#[ignore = "requires Freedoom 0.13.0; run scripts/setup-freedoom.ps1 first"]
+fn service_reports_capture_failure_when_usb_is_disabled() {
+    assert!(Path::new("data/freedoom-0.13.0/freedoom1.wad").is_file());
+    let directory = std::path::PathBuf::from("target/cli-tests")
+        .join(format!("invalid-capture-{}", std::process::id()));
+    std::fs::create_dir_all(&directory).expect("fixture directory");
+    let capture = directory.join("existing-file");
+    std::fs::write(&capture, b"this is a file").expect("capture fixture");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_mcdu-doom"))
+        .args([
+            "serve",
+            "--no-tray",
+            "--no-usb",
+            "--seconds",
+            "1",
+            "--capture",
+        ])
+        .arg(&capture)
+        .output()
+        .expect("console service");
+
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(output.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("create capture directory"), "{stderr}");
+}
+
+#[test]
 fn static_probe_exports_the_requested_wire_stream_without_hardware() {
     let directory = std::path::PathBuf::from("target/cli-tests")
         .join(format!("mcdu-probe-test-{}", std::process::id()));

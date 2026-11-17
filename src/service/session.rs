@@ -14,7 +14,7 @@ use crate::{
     input::Inputs,
     runtime::latest::Latest,
 };
-use anyhow::Result;
+use anyhow::{Context, Result};
 use std::{
     sync::{
         Arc, Mutex,
@@ -128,13 +128,20 @@ impl Session<'_> {
                 }
                 controller.buttons(input, stop);
                 if before.1 != controller.mode {
-                    std::fs::create_dir_all(&options.directory)?;
+                    let path = options.directory.join("preferences.json");
+                    std::fs::create_dir_all(&options.directory).with_context(|| {
+                        format!(
+                            "create preferences directory {}",
+                            options.directory.display()
+                        )
+                    })?;
                     std::fs::write(
-                        options.directory.join("preferences.json"),
+                        &path,
                         serde_json::to_vec_pretty(&Preferences {
                             mode: controller.mode,
                         })?,
-                    )?;
+                    )
+                    .with_context(|| format!("write preferences {}", path.display()))?;
                 }
                 let changed = before
                     != (
@@ -197,7 +204,7 @@ impl Session<'_> {
                     info.application = controller.navigation.view;
                 }
                 if Instant::now() >= snapshot_at || changed {
-                    let info = status.lock().expect("status mutex");
+                    let info = status.lock().expect("status mutex").clone();
                     let snapshot = serde_json::json!({
                         "application": info.application,
                         "connected": info.connected,
@@ -222,10 +229,12 @@ impl Session<'_> {
         usb_stop.store(true, Ordering::Relaxed);
         let usb_result = if let Some(usb) = usb {
             usb.join()
-                .map_err(|_| anyhow::anyhow!("USB worker panicked"))?
+                .map_err(|_| anyhow::anyhow!("USB worker panicked"))
+                .and_then(|result| result)
         } else {
             Ok(())
         };
+        outcome?;
         if let Some(directory) = &options.capture {
             let aircraft_atlas;
             let (atlas, geometry) = if controller.navigation.font_profile() == FontProfile::Aircraft
@@ -267,7 +276,6 @@ impl Session<'_> {
                 }),
             )?;
         }
-        outcome?;
         usb_result
     }
 }

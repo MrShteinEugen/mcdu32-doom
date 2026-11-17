@@ -29,8 +29,9 @@ geometry to the transport. The transport does not depend on MCDU page logic.
 
 On shutdown, the service signals its workers, joins them, releases input and
 clears its status. Closing the command channel also stops the service. A USB
-error returns the service to its connection wait loop. RAII releases input if
-startup fails.
+discovery or I/O error returns the service to its connection wait loop. Errors
+in rendering, preferences or captures end the service and reach the CLI or tray.
+RAII releases input if startup fails.
 
 ## Engine and rendering
 
