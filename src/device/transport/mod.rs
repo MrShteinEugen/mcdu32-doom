@@ -23,6 +23,11 @@ mod session;
 pub use hid::{Transmission, list, write_once};
 use session::spawn_worker;
 
+/// The service may reopen the device after discovery or HID I/O fails.
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+pub(crate) struct ConnectionError(#[from] anyhow::Error);
+
 pub const VENDOR: u16 = 0x4098;
 pub const PRODUCTS: [u16; 3] = [0xbb36, 0xbb3e, 0xbb3a];
 

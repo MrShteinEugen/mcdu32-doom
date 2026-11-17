@@ -3,3 +3,4 @@
 pub mod emulator;
 pub mod keyboard;
 pub mod panel;
+pub mod tray;

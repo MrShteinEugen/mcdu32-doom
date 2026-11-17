@@ -1,0 +1,58 @@
+name: Prepare review packages
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: packages-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+  packages:
+    needs: checks
+    runs-on: windows-2022
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CARGO_INCREMENTAL: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Build reviewed artifacts; reject dirty checkout/tag mismatch
+        run: |
+          $result = ./scripts/prepare-release.ps1 -RequireClean
+          "RELEASE_DIRECTORY=$($result.Directory)" >> $env:GITHUB_ENV
+          "OFFLINE_SOURCE=$($result.Source)" >> $env:GITHUB_ENV
+          "PORTABLE_DIRECTORY=$($result.Portable)" >> $env:GITHUB_ENV
+      - name: Rebuild from vendored source, empty Cargo home
+        run: ./scripts/rebuild-offline.ps1 -Source $env:OFFLINE_SOURCE
+      - name: Run extracted portable CLI without game data or USB
+        run: |
+          & (Join-Path $env:PORTABLE_DIRECTORY 'mcdu-doom.exe') --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & (Join-Path $env:PORTABLE_DIRECTORY 'mcdu-doom.exe') atlas --out target/portable-smoke
+      - name: Independent read-only verification
+        run: python scripts/verify-release.py "$env:RELEASE_DIRECTORY"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: mcdu-doom-review-packages
+          path: |
+            ${{ env.RELEASE_DIRECTORY }}/*.zip
+            ${{ env.RELEASE_DIRECTORY }}/SHA256SUMS.txt
+            ${{ env.RELEASE_DIRECTORY }}/RELEASE-MANIFEST.json
+            ${{ env.RELEASE_DIRECTORY }}/BUILD-INFO.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Review summary
+        run: |
+          "## Prepared artifacts" >> $env:GITHUB_STEP_SUMMARY
+          "Four archives, SHA-256, per-file manifests, Windows dependency SBOM and build identity." >> $env:GITHUB_STEP_SUMMARY
+          "Source rebuilt offline with an empty Cargo home. No GitHub Release was published." >> $env:GITHUB_STEP_SUMMARY
+          "The package manifest records the publication status from the rights review register." >> $env:GITHUB_STEP_SUMMARY

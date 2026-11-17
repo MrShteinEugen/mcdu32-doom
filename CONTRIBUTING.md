@@ -14,10 +14,17 @@ cargo test --locked
 cargo build --release --locked
 ```
 
-Ordinary tests do not enumerate HID devices or write to a panel; the ignored
-hardware smoke test requires explicit opt-in and exclusive access. Engine integration tests
-use the pinned Freedoom IWAD. They skip when the IWAD is absent, so run the setup
-script before checking changes; CI always installs it.
+Run the game-data tests explicitly after installing Freedoom:
+
+```powershell
+cargo test --release --locked --test cli --test engine_smoke --test engine_ui --test emulator_smoke --test service --test mcdu_service -- --ignored --test-threads=1
+python -B -m unittest discover -s scripts/tests -v
+.\scripts\check-powershell.ps1
+```
+
+These targets use synthetic input and do not access USB. Test outputs are stored
+under `target/` and `output/`. A missing IWAD fails an explicitly selected fixture
+test. See [CI](docs/ci.md) and [package verification](docs/packages.md).
 
 Keep hardware changes separate from visual or gameplay changes. Font packing,
 glyph addresses, grid commands and packet timing have physical consequences.
@@ -32,7 +39,7 @@ observations separately when changing the protocol.
 
 New host releases use GPL-3.0-only. Most engine files retain GPL-2.0-or-later;
 the GnuPG SHA-1 file is GPL-3.0-or-later. Preserve upstream project notices and
-the [recorded grant/version ambiguities](docs/legal-review-2026-10-20.md). Preserve third-party
+the [recorded grant/version ambiguities](docs/licensing/review-register.json). Preserve third-party
 notices and document modifications in [THIRD_PARTY.md](THIRD_PARTY.md). Game WADs,
 build products, logs, local research checkouts and savegames are excluded from Git.
 
@@ -48,15 +55,14 @@ or grant over someone else's work is implied. Identify copied/adapted/generated
 material and its exact source and permissions. AI assistance does not establish
 uniqueness or licensing authority; review its output as you would other code.
 
-For future Git contributions, use a real, authorized Git author identity and
+For contributions, use a real, authorized Git author identity and
 `git commit --signoff` to certify the [Developer Certificate of Origin 1.1](https://developercertificate.org/).
 The sign-off certifies origin/authority; it does not transfer copyright, supply
 an absent upstream grant or guarantee non-infringement. Do not forge past
 contributors' sign-offs or identities. Contributions without this attestation
-need origin/authority review before acceptance. The existing pre-Git snapshot
-has no fabricated sign-offs and remains within the release-owner review item.
+need origin/authority review before acceptance.
 
 `scripts/validate-licenses.ps1` compares the checked-in review to the actual locked
 Windows graph, nested notice hashes, selected native files and engine provenance.
-A dependency or license change requires substantive review before updating the
-snapshot. A passing technical check does not resolve the open rights register.
+Review dependency or license changes before updating the inventory. See the
+[license policy](LICENSE-POLICY.md) for the scope of the review.

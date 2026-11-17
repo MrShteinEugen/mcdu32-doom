@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 //! Bounded input polling and padded HID writes, testable without hardware.
-use super::UsbStats;
+use super::{ConnectionError, UsbStats};
 use crate::input::Inputs;
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result, anyhow, bail};
 use hidapi::HidDevice;
 use std::{
     sync::atomic::Ordering,
@@ -34,9 +34,16 @@ pub(super) fn write_report(device: &impl ReportDevice, packet: &[u8]) -> Result<
     validate_report(packet)?;
     let mut report = [0; 64];
     report[..packet.len()].copy_from_slice(packet);
-    let written = device.write(&report).context("write MCDU report")?;
+    let written = device
+        .write(&report)
+        .context("write MCDU report")
+        .map_err(ConnectionError::from)?;
     if written != report.len() {
-        bail!("short HID write: {written}/{} bytes", report.len());
+        return Err(ConnectionError::from(anyhow!(
+            "short HID write: {written}/{} bytes",
+            report.len()
+        ))
+        .into());
     }
     Ok(())
 }
@@ -79,7 +86,7 @@ fn read_reports(device: &impl ReportDevice, mut consume: impl FnMut(&[u8])) -> R
     let mut report = [0; 64];
     // Bound draining so a noisy device cannot starve display output.
     for _ in 0..32 {
-        let count = device.read(&mut report)?;
+        let count = device.read(&mut report).map_err(ConnectionError::from)?;
         if count == 0 {
             break;
         }
@@ -160,17 +167,16 @@ mod tests {
             },
         ] {
             let stats = UsbStats::default();
-            assert!(
-                send(
-                    &device,
-                    &[1],
-                    &Inputs::default(),
-                    &stats,
-                    Duration::ZERO,
-                    &mut Instant::now()
-                )
-                .is_err()
-            );
+            let error = send(
+                &device,
+                &[1],
+                &Inputs::default(),
+                &stats,
+                Duration::ZERO,
+                &mut Instant::now(),
+            )
+            .expect_err("failed send");
+            assert!(error.is::<ConnectionError>());
             assert_eq!(stats.snapshot().usb_reports, 0);
         }
     }
@@ -179,13 +185,25 @@ mod tests {
     fn invalid_lengths_are_rejected_before_writing_or_opening_hardware() {
         let device = Device::default();
         for packet in [vec![], vec![0; 65]] {
-            assert!(write_report(&device, &packet).is_err());
+            let error = write_report(&device, &packet).expect_err("invalid report");
+            assert!(!error.is::<ConnectionError>());
             let error = crate::device::transport::write_once(None, &[packet], Duration::ZERO)
                 .err()
                 .expect("invalid report");
             assert!(error.to_string().contains("invalid HID report length"));
         }
         assert!(device.writes.borrow().is_empty());
+    }
+
+    #[test]
+    fn lost_input_connection_is_reported_through_poll_context() {
+        let device = Device {
+            disconnected: true,
+            ..Device::default()
+        };
+        let error = poll(&device, &Inputs::default()).expect_err("disconnected device");
+        assert!(error.is::<ConnectionError>());
+        assert_eq!(error.to_string(), "read MCDU input");
     }
 
     #[test]

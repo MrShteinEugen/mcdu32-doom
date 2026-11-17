@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 use std::path::Path;
 
-// Explicitly preserve the MVP source set. New C files require review here.
+// Explicit engine source set. New C files require review here.
 const ENGINE_SOURCES: &[&str] = &[
     "am_map.c",
     "d_event.c",

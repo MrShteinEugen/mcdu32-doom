@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 //! Background MCDU session. UI commands never access the C engine or HID handle.
 use crate::{
+    device::transport::ConnectionError,
     display::{Profile, ascii, atlas::Atlas},
     doom::engine::{self, Frame},
     input::Inputs,
@@ -170,7 +171,7 @@ pub fn spawn_with_inputs(
                     };
                     match session.run(&mut controller) {
                         Ok(()) => break,
-                        Err(error) => {
+                        Err(error) if error.is::<ConnectionError>() => {
                             log(&options.directory, &format!("MCDU session: {error:#}"));
                             controller.command(Command::Avionics, &input, &stop);
                             input.release_panel();
@@ -199,6 +200,7 @@ pub fn spawn_with_inputs(
                                 thread::sleep(Duration::from_millis(20));
                             }
                         }
+                        Err(error) => return Err(error),
                     }
                 }
                 Ok(())

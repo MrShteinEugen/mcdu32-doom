@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-//! Device-free runner while the rest of the MVP application is being migrated.
+//! Run the MCDU emulator without a USB device.
 use clap::Parser;
 use mcdu_doom::desktop::emulator;
 

@@ -1,0 +1,50 @@
+name: Scheduled dependency and coverage checks
+on:
+  schedule:
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: cargo install cargo-audit --version 0.22.2 --locked
+      - name: RustSec report (all locked packages, no ignored advisories)
+        run: cargo audit --json > audit.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: rustsec-report
+          path: audit.json
+          if-no-files-found: warn
+          retention-days: 30
+  coverage:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: rustup component add llvm-tools-preview
+      - run: cargo install cargo-llvm-cov --version 0.9.1 --locked
+      - run: cargo llvm-cov --locked --lcov --output-path coverage.lcov
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: rust-coverage
+          path: coverage.lcov
+          if-no-files-found: warn
+          retention-days: 30

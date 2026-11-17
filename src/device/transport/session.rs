@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 //! One worker owns the device and completes each frame before switching fonts.
 use super::{
-    Configuration, Source, UsbStats,
+    Configuration, ConnectionError, Source, UsbStats,
     hid::select_device,
     io::{poll, send},
 };
@@ -26,10 +26,18 @@ pub(super) fn spawn_worker(
     stats: Arc<UsbStats>,
     pacing: Duration,
 ) -> Result<JoinHandle<Result<()>>> {
-    let api = HidApi::new()?;
-    let info = select_device(&api, requested_path.as_deref())?;
-    let device = api.open_path(info.path())?;
-    device.set_blocking_mode(false)?;
+    let api = HidApi::new()
+        .context("initialize MCDU HID")
+        .map_err(ConnectionError::from)?;
+    let info = select_device(&api, requested_path.as_deref()).map_err(ConnectionError::from)?;
+    let device = api
+        .open_path(info.path())
+        .context("open MCDU")
+        .map_err(ConnectionError::from)?;
+    device
+        .set_blocking_mode(false)
+        .context("configure MCDU input")
+        .map_err(ConnectionError::from)?;
     thread::Builder::new()
         .name("mcdu-usb".into())
         .spawn(move || {
