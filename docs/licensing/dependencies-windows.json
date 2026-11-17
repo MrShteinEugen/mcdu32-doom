@@ -2,7 +2,7 @@
   "schema_version": 1,
   "review_date": "2026-10-20",
   "target": "x86_64-pc-windows-msvc",
-  "cargo_lock_sha256": "af4528e99aa3bbbaa95ab326eba7c3e9b8cc300f9604f9cb4a6b5d4ddfe5c7a9",
+  "cargo_lock_sha256": "736f3001a3c26a0bdc9d4842dbdcb097263a8c7254ab5064134e076a19179653",
   "scope": "Default-feature locked application graph; package declarations plus explicit native/file exceptions; no blanket file-level clearance",
   "native_and_file_exceptions": "docs/licensing/native-components.json",
   "packages": [
@@ -187,9 +187,9 @@
     },
     {
       "name": "cc",
-      "version": "1.8.0",
+      "version": "1.11.2",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "registry_checksum": "6651c9ed80effdc7db0ff72512157f901af5e3549e341e24b1dd4887d836d838",
+      "registry_checksum": "33ef9e3e8154a45c7a95cff4c1299702106ad94062d7bb85fdc5d3a5afd91d45",
       "declared_license": "MIT OR Apache-2.0",
       "selected_package_license": "MIT",
       "features": [],
@@ -408,9 +408,9 @@
     },
     {
       "name": "find-msvc-tools",
-      "version": "0.1.14",
+      "version": "0.1.15",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "registry_checksum": "aedcfb3409746eddb02b9e19ebda1c3394f759a152e48ee875a0844d1b955484",
+      "registry_checksum": "1c66915cc5391097de7a2b0b972e8505aa33c0df401fd3a6811dbdb32881ba48",
       "declared_license": "MIT OR Apache-2.0",
       "selected_package_license": "MIT",
       "features": [],
